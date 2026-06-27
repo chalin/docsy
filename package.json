@@ -6,6 +6,8 @@
   "license": "Apache-2.0",
   "private": true,
   "bin": {
+    "check-links": "scripts/lychee/check/index.mjs",
+    "refcache": "scripts/lychee/refcache/index.mjs",
     "gen-favicons": "scripts/gen-favicons/cli.mjs"
   },
   "files": [
@@ -15,7 +17,10 @@
     "scripts/mkdirp-hugo-mod.js",
     "scripts/gen-favicons/cli.mjs",
     "scripts/gen-favicons/index.mjs",
-    "scripts/gen-favicons/README.md"
+    "scripts/gen-favicons/README.md",
+    "scripts/lychee/check/index.mjs",
+    "scripts/lychee/refcache/index.mjs",
+    "scripts/lychee/README.md"
   ],
   "workspaces": [
     "docsy.dev",
