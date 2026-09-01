@@ -42,9 +42,11 @@ const PINS = [
   },
   {
     param: 'markmap',
-    template: 'theme/layouts/_partials/scripts/markmap.html',
+    // The autoloader is vendored (GetRemote) since the js-plugins spike; the
+    // pin now feeds the vendor fetch rather than a browser-facing CDN tag.
+    template: 'theme/layouts/_partials/scripts/markmap-vendor.html',
     cdnPackage: 'markmap-autoloader',
-    urlForm: '{{ $version }}',
+    urlForm: '%s',
   },
   {
     param: 'redoc',

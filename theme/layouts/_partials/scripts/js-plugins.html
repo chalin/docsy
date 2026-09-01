@@ -4,8 +4,20 @@
   { name, enable, defer, pageGate, options }. Options are passed to js.Build
   as params and reach the module via `import * as params from '@params'`.
   Registry order is the emission order. pageGate names a .Page.Store flag;
-  when set, the plugin is emitted only on pages carrying the flag. */ -}}
-{{ range .Site.Params.docsy.jsPlugins -}}
+  when set, the plugin is emitted only on pages carrying the flag. An entry
+  may name a vendorPartial (under scripts/), emitted right after its plugin
+  script — the vendored-library hook. */ -}}
+{{/* Theme-default entries, aliasing legacy params: params.markmap.* keeps
+  working for one deprecation cycle by mapping onto a registry entry; a
+  site-declared markmap entry overrides the alias. */ -}}
+{{ $registry := .Site.Params.docsy.jsPlugins | default slice -}}
+{{ $names := slice -}}
+{{ range $registry }}{{ $names = $names | append .name }}{{ end -}}
+{{ if and .Site.Params.markmap.enable (not (in $names "markmap")) -}}
+  {{ $options := dict "height" (.Site.Params.markmap.height | default "300px") -}}
+  {{ $registry = $registry | append (dict "name" "markmap" "options" $options "vendorPartial" "markmap-vendor.html") -}}
+{{ end -}}
+{{ range $registry -}}
   {{ $entry := . -}}
   {{ if ne $entry.enable false -}}
     {{ if or (not $entry.pageGate) ($.Page.Store.Get $entry.pageGate) -}}
@@ -21,6 +33,9 @@
           <script {{ if $entry.defer }}defer {{ end }}src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}" crossorigin="anonymous"></script>
         {{ else -}}
           <script {{ if $entry.defer }}defer {{ end }}src="{{ $js.RelPermalink }}"></script>
+        {{ end -}}
+        {{ with $entry.vendorPartial -}}
+          {{ partial (printf "scripts/%s" .) $ -}}
         {{ end -}}
       {{ else -}}
         {{ warnidf "docsy-js-plugin-missing" "JS plugin %q is registered in params.docsy.jsPlugins but assets/%s was not found." $entry.name $path -}}

@@ -1,8 +1,4 @@
-{{/* cSpell:ignore markmap plantuml katex hasmermaid */ -}}
-
-{{ if .Site.Params.markmap.enable -}}
-  {{ partial "scripts/markmap.html" . -}}
-{{ end -}}
+{{/* cSpell:ignore plantuml katex hasmermaid */ -}}
 
 {{ if .Site.Params.plantuml.enable -}}
   {{ partial "scripts/plantuml-deflate.html" . -}}
