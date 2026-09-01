@@ -91,6 +91,29 @@ test('defer is honored on the emitted script tag', () => {
   );
 });
 
+test('a project plugin shadows the theme plugin of the same name', () => {
+  // tabpane-persist is a theme-shipped plugin; the fixture site provides its
+  // own file under the same name. Union FS: the project file must win.
+  const r = buildSite('js-plugins-shadow', {
+    files: {
+      ...content,
+      'content/docs/tabs.md':
+        '---\ntitle: Tabs\n---\n\n{{< tabpane text=true >}}\n' +
+        '{{< tab header="One" >}}one{{< /tab >}}\n{{< /tabpane >}}\n',
+      'assets/js/plugins/tabpane-persist.js':
+        "console.log('project-shadow-wins');\n",
+    },
+    title: 'Docsy shadowing fixture',
+  });
+  assert.equal(r.status, 0, `hugo build succeeds:\n${r.stderr}`);
+  const html = r.publicFile('docs/tabs/index.html');
+  const m = html.match(/<script[^>]*src="\/(js\/plugins\/tabpane-persist[^"]*\.js)"/);
+  assert.ok(m, 'tabpane-persist plugin script tag is emitted');
+  const js = r.publicFile(m[1]);
+  assert.match(js, /project-shadow-wins/, 'the project file shadows the theme plugin');
+  assert.doesNotMatch(js, /td-tp-persist/, 'the theme implementation is fully replaced');
+});
+
 test('a pageGate plugin is emitted only where its Store flag is set', () => {
   const r = buildSite('js-plugins-gate', {
     files: {

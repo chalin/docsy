@@ -17,6 +17,9 @@
   {{ $options := dict "height" (.Site.Params.markmap.height | default "300px") -}}
   {{ $registry = $registry | append (dict "name" "markmap" "options" $options "vendorPartial" "markmap-vendor.html") -}}
 {{ end -}}
+{{ if not (in $names "tabpane-persist") -}}
+  {{ $registry = $registry | append (dict "name" "tabpane-persist" "pageGate" "hasTabs") -}}
+{{ end -}}
 {{ range $registry -}}
   {{ $entry := . -}}
   {{ if ne $entry.enable false -}}

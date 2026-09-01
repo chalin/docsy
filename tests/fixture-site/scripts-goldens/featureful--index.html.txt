@@ -5,6 +5,5 @@
 <script src='/js/prism.js'></script>
 <script src="/js/plugins/markmap.74773d21e23875de1bc00a5aeb28417f8ae9aa3efdf838450c522aae51ed8ec1.js" integrity="sha256-dHc9IeI4dd4bwApa6yhBf4rpqj79&#43;DhFDFIqrlHtjsE=" crossorigin="anonymous"></script>
         <script src="/js/vendor/markmap-autoloader.2dc8442b37b95ee09a139ca25d77e5f7c8c3c3f67cc1ae55c041a50c9f60908f.js" integrity="sha256-LchEKze5XuCaE5yiXXfl98jDw/Z8wa5VwEGlDJ9gkI8=" crossorigin="anonymous"></script>
-      <script src='/js/tabpane-persist.js'></script>
-
+      
   
