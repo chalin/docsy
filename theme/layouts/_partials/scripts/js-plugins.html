@@ -1,0 +1,30 @@
+{{/* JS-plugin loop (js-plugins spike): emits each registered plugin from
+  assets/js/plugins/ (theme, project, or module-mounted; a same-named project
+  file shadows the theme's). Registry: params.docsy.jsPlugins, a list of
+  { name, enable, defer, pageGate, options }. Options are passed to js.Build
+  as params and reach the module via `import * as params from '@params'`.
+  Registry order is the emission order. pageGate names a .Page.Store flag;
+  when set, the plugin is emitted only on pages carrying the flag. */ -}}
+{{ range .Site.Params.docsy.jsPlugins -}}
+  {{ $entry := . -}}
+  {{ if ne $entry.enable false -}}
+    {{ if or (not $entry.pageGate) ($.Page.Store.Get $entry.pageGate) -}}
+      {{ $path := printf "js/plugins/%s.js" $entry.name -}}
+      {{ with resources.Get $path -}}
+        {{ $opts := dict "params" ($entry.options | default dict) -}}
+        {{ if hugo.IsProduction -}}
+          {{ $opts = merge $opts (dict "minify" true) -}}
+        {{ end -}}
+        {{ $js := . | js.Build $opts -}}
+        {{ if hugo.IsProduction -}}
+          {{ $js = $js | fingerprint -}}
+          <script {{ if $entry.defer }}defer {{ end }}src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}" crossorigin="anonymous"></script>
+        {{ else -}}
+          <script {{ if $entry.defer }}defer {{ end }}src="{{ $js.RelPermalink }}"></script>
+        {{ end -}}
+      {{ else -}}
+        {{ warnidf "docsy-js-plugin-missing" "JS plugin %q is registered in params.docsy.jsPlugins but assets/%s was not found." $entry.name $path -}}
+      {{ end -}}
+    {{ end -}}
+  {{ end -}}
+{{ end -}}
