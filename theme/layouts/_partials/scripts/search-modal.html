@@ -1,0 +1,37 @@
+{{/* Ctrl+K search modal (alpine-plugin spike): markup + scoped CSS for the
+  search-modal JS plugin, emitted through the registry entry's vendorPartial
+  hook. Behavior lives in assets/js/plugins/search-modal.js (Alpine component
+  tdSearchModal, registered on alpine:init); the modal body reuses the
+  search-input partial, so whichever search backend the site configures is
+  what the modal wraps. */ -}}
+<div x-data="tdSearchModal" x-cloak
+    @keydown.window.prevent.ctrl.k="open()"
+    @keydown.window.prevent.cmd.k="open()"
+    @keydown.escape.window="close()">
+  <div class="td-search-modal" x-show="isOpen" @click.self="close()"
+      role="dialog" aria-modal="true" aria-label='{{ T "ui_search" }}'>
+    <div class="td-search-modal__panel" x-ref="panel">
+      {{ partial "search-input.html" . }}
+    </div>
+  </div>
+</div>
+<style>
+  [x-cloak] { display: none !important; }
+  .td-search-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1080;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 15vh;
+    background: rgba(0, 0, 0, 0.5);
+  }
+  .td-search-modal__panel {
+    min-width: min(90vw, 32rem);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    background: var(--bs-body-bg, #fff);
+    box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.3);
+  }
+</style>
