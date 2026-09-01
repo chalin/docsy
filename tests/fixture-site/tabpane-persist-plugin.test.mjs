@@ -33,7 +33,8 @@ test('tabpane-persist ships only on pages using tabs, fingerprinted', () => {
   });
   assert.equal(r.status, 0, `hugo build succeeds:\n${r.stderr}`);
 
-  const scriptRe = /<script[^>]*src="\/(js\/plugins\/tabpane-persist[^"]*\.js)"/;
+  const scriptRe =
+    /<script[^>]*src="\/(js\/plugins\/tabpane-persist[^"]*\.js)"/;
   for (const page of ['docs/aaa-tabs/index.html', 'docs/zzz-tabs/index.html']) {
     const m = r.publicFile(page).match(scriptRe);
     assert.ok(m, `${page} loads the tabpane-persist plugin`);
