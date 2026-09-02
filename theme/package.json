@@ -39,8 +39,8 @@
     "update:packages": "npm-check-updates -u -x @fortawesome/fontawesome-free,bootstrap"
   },
   "dependencies": {
+    "@alpinejs/csp": "3.16.3",
     "@fortawesome/fontawesome-free": "7.3.1",
-    "alpinejs": "3.16.3",
     "bootstrap": "5.3.8"
   }
 }

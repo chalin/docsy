@@ -34,6 +34,11 @@ test('enabling the alpine plugin ships the Alpine runtime', () => {
   const js = r.publicFile(m[1]);
   assert.match(js, /Alpine/, 'bundle carries the Alpine runtime');
   assert.match(js, /alpine:init/, 'runtime dispatches alpine:init');
+  assert.doesNotMatch(
+    js,
+    /new (Async)?Function\s*\(/,
+    'runtime evaluates without Function constructors (CSP-safe, no unsafe-eval)',
+  );
 });
 
 test('without a registry entry, zero Alpine bytes ship', () => {
@@ -54,9 +59,11 @@ test('without a registry entry, zero Alpine bytes ship', () => {
 });
 
 test('a later-registered project plugin extends the theme-shipped Alpine', () => {
-  // Registry order is the emission order; the consumer registers via
-  // alpine:init, which fires when Alpine.start() runs after DOMContentLoaded,
-  // so document order (= registry order) is what the convention needs.
+  // The consumer registers via alpine:init; the theme's alpine plugin defers
+  // Alpine.start() to DOMContentLoaded, which fires after every deferred
+  // plugin script has run — so listeners are heard regardless of registry
+  // position. (With a synchronous start, consumers after alpine missed the
+  // event — caught in-browser, invisible to these static assertions.)
   const r = buildSite('alpine-consumer', {
     files: {
       ...content,
