@@ -49,6 +49,8 @@ development builds. Companion nets:
   opt-out, and theme-plugin shadowing.
 - [`markmap-plugin.test.mjs`][markmap-test] and
   [`click-to-copy-plugin.test.mjs`][c2c-test]: the per-conversion contracts.
+- [`print-scripts.test.mjs`][print-test]: page-gated scripts reach section print
+  output (the descendant flag merge).
 
 ## Acceptance test
 
@@ -109,6 +111,7 @@ safeguard proves the signal:
 [loop-test]: https://github.com/google/docsy/blob/main/tests/fixture-site/plugins.test.mjs
 [markmap-test]: https://github.com/google/docsy/blob/main/tests/fixture-site/markmap-plugin.test.mjs
 [plugin-runtime-test]: https://github.com/google/docsy/blob/main/tests/visual/plugins-runtime.test.mjs
+[print-test]: https://github.com/google/docsy/blob/main/tests/fixture-site/print-scripts.test.mjs
 [runtime-test]: https://github.com/google/docsy/blob/main/tests/visual/js-runtime.test.mjs
 [tabpane-test]: https://github.com/google/docsy/blob/main/tests/fixture-site/tabpane-persist-plugin.test.mjs
 <!-- prettier-ignore-end -->

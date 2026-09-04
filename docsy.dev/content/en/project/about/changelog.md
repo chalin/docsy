@@ -171,6 +171,8 @@ history since 0.17.0][].
 - Fixed search-box issues (queries truncating at `&` or `#`; navigation firing
   while committing IME-composed text) and navbar scroll-indicator clicks
   scrolling multiple times after window resizes ([#1436][]).
+- Fixed page-gated scripts (Mermaid, KaTeX, and the new plugin gates) missing
+  from section print output ([#NNNN][]).
 
 [**Experimental**](#experimental):
 
