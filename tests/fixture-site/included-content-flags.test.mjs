@@ -1,5 +1,6 @@
 // Pins where page flags land when content is reused, per flag kind (render
-// hook vs shortcode) and reuse path (`.RenderShortcodes` vs `.Content`). The
+// hook vs shortcode) and reuse path (`.RenderShortcodes` vs `.Content`), and
+// that `.HasShortcode` follows `.RenderShortcodes` (Hugo >= 0.123). The
 // documented claims: https://www.docsy.dev/docs/content/plugins/#page-flags-in-included-content.
 // One build per path: a page's Store is one object, so a second includer would
 // muddy where a flag came from.
@@ -38,7 +39,8 @@ const files = {
   // snippet's: where a flag the includer did not receive actually landed.
   'layouts/_partials/hooks/body-end.html':
     store('includer') +
-    `{{ with site.GetPage "/docs/snippet" }}${store('snippet')}{{ end }}`,
+    `{{ with site.GetPage "/docs/snippet" }}${store('snippet')}{{ end }}` +
+    '<span data-includer-hasshortcode="{{ .HasShortcode "flag" }}"></span>\n',
 };
 
 const build = (name, includer) => {
@@ -55,6 +57,12 @@ const build = (name, includer) => {
   assert.match(html, /language-markmap/, 'markmap fence rendered');
   assert.match(html, /data-td-tp-persist/, 'tabpane rendered');
   return html;
+};
+
+const hasShortcode = (html) => {
+  const m = html.match(/data-includer-hasshortcode="([^"]*)"/);
+  assert.ok(m, 'includer HasShortcode is printed');
+  return m[1] === 'true';
 };
 
 const storeOf = (html, who) => {
@@ -87,6 +95,11 @@ test('.RenderShortcodes: the hook flags the includer, the shortcode flags the sn
     /js\/plugins\/markmap/,
     'gated markmap plugin ships on the includer',
   );
+  assert.equal(
+    hasShortcode(html),
+    true,
+    'includer .HasShortcode sees the snippet shortcode',
+  );
 });
 
 test('.Content: both flags land on the snippet, none on the includer', () => {
@@ -108,5 +121,10 @@ test('.Content: both flags land on the snippet, none on the includer', () => {
     html,
     /js\/plugins\/markmap/,
     'gated markmap plugin does not ship on the includer',
+  );
+  assert.equal(
+    hasShortcode(html),
+    false,
+    'includer .HasShortcode does not see the snippet shortcode',
   );
 });
