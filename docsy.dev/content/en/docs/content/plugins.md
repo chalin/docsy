@@ -16,27 +16,28 @@ Docsy loads some of its optional JavaScript features, and any script you add, as
 | `tabpane-persist` | Remembers the selected tab across pages    | On                                      | Every page ([why](#page-flags-in-included-content)) | [`tabpane`][]                  |
 | `markmap`         | Renders `markmap` code blocks as mind maps | Off                                     | Pages with a `markmap` code block                   | [Activating MarkMap support][] |
 
-To turn a plugin off, set its entry to `false`:
+To turn a plugin off, set its `enable` field to `false`:
 
 <!-- markdownlint-disable no-shortcut-ref-link -->
 <!-- prettier-ignore-start -->
 {{< tabpane >}}
 {{< tab header="Configuration file:" disabled=true />}}
 {{< tab header="hugo.toml" lang="toml" >}}
-[params.docsy.plugins]
-click-to-copy = false
+[params.docsy.plugins.click-to-copy]
+enable = false
 {{< /tab >}}
 {{< tab header="hugo.yaml" lang="yaml" >}}
 params:
   docsy:
     plugins:
-      click-to-copy: false
+      click-to-copy:
+        enable: false
 {{< /tab >}}
 {{< tab header="hugo.json" lang="json" >}}
 {
   "params": {
     "docsy": {
-      "plugins": { "click-to-copy": false }
+      "plugins": { "click-to-copy": { "enable": false } }
     }
   }
 }
@@ -49,14 +50,25 @@ params:
 
 Docsy's own plugins are declared in the theme's [`hugo.yaml`][theme-defaults];
 your entries merge over them by name and field ([Configuration § Theme
-defaults][config-merge]). Each entry's fields, types, and defaults:
+defaults][config-merge]). The schema defines each entry's keys, required fields,
+types, defaults, and syntactic patterns:
 
 {{< readfile file="/data/docsy/schema/params/docsy.yaml" code="true" lang="yaml" >}}
 
-- `{}` in place of an entry keeps every default.
+- Fields are optional unless marked `required: true`.
+- `{}` for a theme plugin keeps every inherited field, including `enable`.
 - `enable` is off for `false`, `"false"`, and `0`, and on for any other value;
   `defer` is on for `true`, `"true"`, and `1`, and off for any other value. The
   string forms exist for [environment overrides][config-env].
+- `weight` controls emission order within the plugin registry:
+  - Lower values emit first. Omitted weight and explicit `0` form the normal
+    group; negative values precede it, positive values follow it.
+  - Use distinct weights when order matters; equal-weight order is unspecified.
+  - Weight does not override `defer` or wait for asynchronous initialization.
+    Use the dependency's readiness mechanism when needed.
+
+For guidance on using `version`, see
+[Dependency versions](#dependency-versions).
 
 ### Warnings
 
@@ -65,14 +77,24 @@ Every registry shape warning carries the id `docsy-config` (to silence one, see
 
 - An unknown field or a non-map `options` is ignored and the rest of the entry
   applies.
-- A name the schema's pattern rejects or that ends in its reserved suffix, or a
-  scalar entry other than a false spelling, drops the whole entry.
+- A name the schema's pattern rejects or that ends in its reserved suffix, a
+  scalar entry, or an entry missing a required field drops the whole entry.
 - A `params.docsy` or `params.docsy.plugins` that is not a map empties the
   registry, Docsy's own plugins and their deprecated aliases included.
   `plugins: {}` keeps them; a valueless `plugins:` is null and drops them.
+- An empty registry after configuration merging warns; a registry with all
+  entries disabled is valid.
 - An enabled name with no script file ([Plugin files](#plugin-files)) is a
   different fault: it warns `docsy-plugin-missing`, gated or not (a disabled
   entry is never looked up).
+
+`version` validation applies to entries not already dropped by the shape guards,
+including disabled entries. An exact `X.Y.Z` passes without a version warning;
+another value matching the schema's pattern, such as `latest`, warns under
+_`NAME`_`-floating-version`, where _`NAME`_ is the entry's name. An empty or
+malformed value fails the build and skips the entry before its companion runs.
+
+For why Docsy pins versions, see [Pinned script-dependency versions][ug-pins].
 
 ## Add a custom script
 
@@ -90,20 +112,21 @@ body hooks][] instead.
 {{< tabpane >}}
 {{< tab header="Configuration file:" disabled=true />}}
 {{< tab header="hugo.toml" lang="toml" >}}
-[params.docsy.plugins]
-NAME = {}
+[params.docsy.plugins.NAME]
+enable = true
 {{< /tab >}}
 {{< tab header="hugo.yaml" lang="yaml" >}}
 params:
   docsy:
     plugins:
-      NAME: {}
+      NAME:
+        enable: true
 {{< /tab >}}
 {{< tab header="hugo.json" lang="json" >}}
 {
   "params": {
     "docsy": {
-      "plugins": { "NAME": {} }
+      "plugins": { "NAME": { "enable": true } }
     }
   }
 }
@@ -128,6 +151,22 @@ stylesheet tags carry [subresource integrity][SRI] in every environment. Entry
 keys reach templates and plugin scripts lowercase: `.Plugin.pagegate`,
 `params.apikey` ([Configuration § Key spelling][config-keys]).
 
+### Dependency versions
+
+The entry's `version` selects a plugin dependency version. The companion partial
+determines which dependency it refers to. The field does not automatically
+identify the version of the plugin script itself or the Docsy theme.
+
+For a custom plugin with a configurable dependency, set `version` on its
+registry entry and read `.Plugin.version` in the companion partial. Use that
+value to select the dependency's code, for example in a build-time fetch URL.
+Declaring `version` does not fetch code automatically. Omit the field if the
+plugin has no dependency version to configure.
+
+Unlike `options`, the entry's `version` is not passed to the plugin script
+through `@params`. For a working example and instructions for overriding a
+theme-provided pin, see [MarkMap version][markmap-version].
+
 ### Security
 
 - Never pipe `.Plugin.options` through `safeHTML`, `safeJS`, or `safeURL` in a
@@ -138,9 +177,10 @@ keys reach templates and plugin scripts lowercase: `.Plugin.pagegate`,
   option interpolated into a `<style>` can close the rule and open its own).
 - Options, like anything reaching a module as `@params`, ship world-readable in
   the built JavaScript: never route secrets through them.
-- Pin third-party dependencies, never `latest`; vendor build-time fetches and
-  serve them with SRI; and use no loader that pulls unpinned secondary code,
-  which SRI on the loader can't cover.
+- Pin third-party dependencies on the entry's `version`, never `latest`.
+- Vendor build-time fetches and serve them with SRI.
+- Use no loader that pulls unpinned secondary code, which SRI on the loader
+  can't cover.
 - A plugin that loads remote code gets a `pageGate` (a flag your own render hook
   sets with `.Page.Store.Set`), so its code ships only where used.
 
@@ -171,10 +211,12 @@ from a shortcode. For MarkMap's authoring paths and how to clear its gate, see
 [`@params`]: https://gohugo.io/functions/js/build/#params
 [`js.Build`]: https://gohugo.io/functions/js/build/
 [config-env]: /docs/content/configuration/#environment-variables
+[ug-pins]: /docs/content/diagrams-and-formulae/#script-dep-versions
 [config-keys]: /docs/content/configuration/#key-spelling
 [config-merge]: /docs/content/configuration/#theme-defaults-and-your-overrides
 [config-warnings]: /docs/content/configuration/#configuration-warnings
 [design-ordering]: /project/design/script-loading/#ordering-decisions
+[markmap-version]: /docs/content/diagrams-and-formulae/#markmap-version
 [theme-defaults]: https://github.com/google/docsy/blob/main/theme/hugo.yaml
 [SRI]: https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity
 <!-- prettier-ignore-end -->

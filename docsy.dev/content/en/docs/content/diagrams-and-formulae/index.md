@@ -19,9 +19,9 @@ partial version such as `11`, is re-resolved by the CDN on each request or
 uncached build, so your site's rendering could change or break without any
 change on your part (for example, when an upstream major ships).
 
-To use a different version of one of these dependencies, set
+To use a different version of Mermaid, KaTeX, or Redoc, set
 `params.`_`PACKAGE`_`.version` in your configuration file, where _`PACKAGE`_ is
-`mermaid`, `katex`, `markmap`, or `redoc`:
+`mermaid`, `katex`, or `redoc`:
 
 <!-- markdownlint-disable no-shortcut-ref-link -->
 <!-- prettier-ignore-start -->
@@ -49,12 +49,16 @@ params:
 <!-- prettier-ignore-end -->
 <!-- markdownlint-enable no-shortcut-ref-link -->
 
+For MarkMap's plugin pin and validation rules, see
+[MarkMap version](#markmap-version) and [Plugins § Warnings][plugins-warnings].
+
 Use an exact version (`X.Y.Z`): a non-exact version emits a build warning; if
-intentional, suppress it by adding _`PACKAGE`_`-floating-version` (for example,
+intentional, suppress it by adding the id the warning prints (for example,
 `katex-floating-version`) to your site's
 [`ignoreLogs`](https://gohugo.io/configuration/all/#ignorelogs).
 
 [`redoc` shortcode]: /docs/content/shortcodes/#redoc
+[plugins-warnings]: /docs/content/plugins/#warnings
 
 ## LaTeX support with KaTeX
 
@@ -680,17 +684,32 @@ params:
 
 > [!NOTE]
 >
-> Before 0.18, MarkMap was enabled with `params.markmap.enable`. That parameter
-> is deprecated: it still works for this release cycle, with a build warning,
-> and keeps its pre-0.18 behavior of loading MarkMap on every page.
+> Before 0.18, MarkMap was configured under `params.markmap`: `enable` and the
+> [`version`](#markmap-version) pin. Both are deprecated but still honored for
+> this release cycle, with a build warning:
+>
+> - `enable: true` keeps its pre-0.18 behavior of loading MarkMap on every page.
+> - A present `version` overrides the entry's, and an empty one fails the build.
+>
+> Move `enable` onto the registry entry, and `version` only if you had
+> overridden the theme's pin; then remove `params.markmap`.
 
 ### MarkMap version
 
-At build time, Docsy fetches the [pinned version](#script-dep-versions),
-currently {{% param markmap.version %}}, of the [markmap-autoloader][] package's
-entry file and serves it from your site with subresource integrity.
+Normally, omit a `version` override in your MarkMap entry to inherit Docsy's pin
+and its updates.
 
-- To use a different version, set `params.markmap.version`.
+At build time, Docsy fetches the [pinned version](#script-dep-versions),
+currently {{% param docsy.plugins.markmap.version %}}, of the
+[markmap-autoloader][] package's entry file and serves it from your site with
+subresource integrity.
+
+If the effective pin is empty, check your version overrides, including the
+deprecated `params.markmap.version`, and [theme configuration
+merging][config-merge].
+
+- To use a different version, set `version` on the entry:
+  `markmap: { enable: true, version: "X.Y.Z" }`.
 - Sites that restrict Hugo's remote fetches (`security.http`) must allow
   `cdn.jsdelivr.net`.
 - To build without network access, override the plugin's companion partial,
@@ -698,6 +717,7 @@ entry file and serves it from your site with subresource integrity.
 - The autoloader itself loads MarkMap's runtime libraries from a public CDN in
   the browser, at versions it pins but without subresource integrity.
 
+[config-merge]: /docs/content/configuration/#theme-defaults-and-your-overrides
 [CSS length]:
   https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/length
 [markmap-autoloader]: https://www.npmjs.com/package/markmap-autoloader

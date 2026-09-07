@@ -3,12 +3,10 @@
 // (see maintainer notes, "Default script-dependency versions"). Fast and
 // offline.
 //
-// The YAML assertions are the canary proper: a pin regressing to a value
-// like `latest` goes red here and nowhere else (dependency scanners can't
-// see these values, and Renovate would silently stop matching). The
-// template-side assertions are a lint against carelessly reintroducing a
-// fallback or hardcoded version, not a boundary against deliberate
-// evasion: code review owns that.
+// The YAML assertions catch non-exact theme pins directly, without building
+// a site. Template-side assertions are a lint against carelessly reintroducing
+// a fallback or hardcoded version, not a boundary against deliberate evasion:
+// code review owns that.
 
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -24,9 +22,20 @@ const repoRoot = path.resolve(
 
 const SEMVER = /^\d+\.\d+\.\d+$/;
 
+const siteParam = (name) => ({
+  key: `params.${name}.version`,
+  value: (config) => config?.params?.[name]?.version,
+  read: String.raw`\$version := \.Site\.Params\.${name}\.version \| string \| strings\.TrimSpace`,
+});
+const pluginEntry = (name) => ({
+  key: `params.docsy.plugins.${name}.version`,
+  value: (config) => config?.params?.docsy?.plugins?.[name]?.version,
+  read: String.raw`\$version := \.Plugin\.version`,
+});
+
 const PINS = [
   {
-    param: 'mermaid',
+    pin: siteParam('mermaid'),
     template: 'theme/layouts/_partials/scripts/mermaid.html',
     cdnPackage: 'mermaid',
     // How the template interpolates $version into its CDN URL: a printf
@@ -35,13 +44,13 @@ const PINS = [
     urlForm: '%s',
   },
   {
-    param: 'katex',
+    pin: siteParam('katex'),
     template: 'theme/layouts/_partials/scripts/katex.html',
     cdnPackage: 'katex',
     urlForm: '%s',
   },
   {
-    param: 'markmap',
+    pin: pluginEntry('markmap'),
     // The pin feeds the vendor fetch (the companion partial), not a
     // browser-facing CDN tag.
     template: 'theme/layouts/_partials/scripts/plugins/markmap.html',
@@ -49,7 +58,7 @@ const PINS = [
     urlForm: '%s',
   },
   {
-    param: 'redoc',
+    pin: siteParam('redoc'),
     template: 'theme/layouts/_shortcodes/redoc.html',
     cdnPackage: 'redoc',
     urlForm: '{{ $version }}',
@@ -60,25 +69,21 @@ const themeConfig = parse(
   fs.readFileSync(path.join(repoRoot, 'theme/hugo.yaml'), 'utf8'),
 );
 
-for (const { param, template, cdnPackage, urlForm } of PINS) {
+for (const { pin, template, cdnPackage, urlForm } of PINS) {
   test(`theme/hugo.yaml pins an exact ${cdnPackage} version`, () => {
-    const version = themeConfig?.params?.[param]?.version;
+    const version = pin.value(themeConfig);
     assert.ok(
       version !== undefined,
-      `params.${param}.version is declared in theme/hugo.yaml`,
+      `${pin.key} is declared in theme/hugo.yaml`,
     );
-    assert.equal(
-      typeof version,
-      'string',
-      `params.${param}.version is a string`,
-    );
+    assert.equal(typeof version, 'string', `${pin.key} is a string`);
     // Prerelease pins (X.Y.Z-rc.N) are deliberately rejected: the theme
     // default stays on stable releases. Sites can still pin one; they get the
     // suppressible non-exact-version warning.
     assert.match(
       version,
       SEMVER,
-      `params.${param}.version is X.Y.Z, not a value like \`latest\``,
+      `${pin.key} is X.Y.Z, not a value like \`latest\``,
     );
   });
 
@@ -86,12 +91,8 @@ for (const { param, template, cdnPackage, urlForm } of PINS) {
     const text = fs.readFileSync(path.join(repoRoot, template), 'utf8');
     assert.match(
       text,
-      new RegExp(
-        // Companion partials receive a { Page, Plugin } dict, hence the
-        // optional .Page prefix; a type guard may precede the read (`=`).
-        String.raw`\$version :?= (\.Page)?\.Site\.Params\.${param}\.version \| string \| strings\.TrimSpace`,
-      ),
-      `the template reads params.${param}.version bare, first in its pipeline`,
+      new RegExp(pin.read),
+      `the template reads ${pin.key} bare, first in its pipeline`,
     );
     // Both `| default` (pipe form) and `default "x" .Site...` (call form);
     // the argument shape keeps prose mentions of "default" out of scope.

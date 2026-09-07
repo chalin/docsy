@@ -78,24 +78,28 @@ defaults][ug-config-merge]), so a site's map layers over the theme's:
 
 - **Supersession and inheritance come free**: a site entry for a theme plugin
   merges field by field (`markmap: { enable: true }` keeps the theme's
-  `pageGate`), and a scalar `false` replaces the theme's entry outright, which
-  is the turn-off shorthand.
+  `pageGate`).
 - **Duplicates are impossible**: map keys are unique. The loop needs no
   deduplication, no first-wins rule, no supersession bookkeeping.
+- **A plugin dependency's version pin is an entry field**, not an option and not
+  a top-level `params.NAME.*` key:
+  - Plugin settings share one key and one environment-override prefix.
+  - Keeping the pin outside `options` keeps it out of the built JavaScript,
+    which never reads it.
+  - The loop validates the pin once, for every companion that builds a fetch URL
+    from it.
 - **The schema is data**: `data/docsy/schema/params/docsy.yaml` declares the
-  entry fields, types, and defaults once, for the loop and the docs alike.
-  Enforcement stays hand-coded in the loop: Hugo offers no validation for
-  `params`, and no surveyed theme validates site params (Hinode's data-driven
-  `Args.html` covers shortcode arguments only).
+  entry contract once, for the loop and the docs alike. Enforcement stays
+  hand-coded in the loop: Hugo offers no validation for `params`, and no
+  surveyed theme validates site params (Hinode's data-driven `Args.html` covers
+  shortcode arguments only).
 - **The loop is generic**: it knows no plugin names. Theme defaults are
   configuration, not template code; plugin-specific behavior lives in the
   plugin's own files: its script, its companion partial, and, for parameters
   that predate the registry, a per-plugin shim partial that decorates the
   plugin's entry.
-- **Plugins are site-wide**: the registry is read from site configuration, not
-  per language.
-- **Order**: `weight` ascending, then name, Hugo's idiom for ordering named
-  things.
+- **Plugins use site configuration**: language-specific site parameters apply;
+  page front matter does not define registry entries.
 
 Alternatives considered, and why not:
 
@@ -138,6 +142,10 @@ idiom.
 
 ### Ordering decisions
 
+- **Neutral weight group**: the [emission-order contract][ug-config] uses zero
+  as the normal group, leaving room for earlier and later plugins without an
+  `auto` mode or dependency graph. Sorting ties by name keeps output
+  reproducible, but is an implementation detail, not a dependency guarantee.
 - **Companions before the script**: a plugin's companion partial and stylesheet
   emit before its script tag, so a synchronous plugin script can rely on
   companion markup and styles being present.
@@ -159,6 +167,7 @@ idiom.
 [plugins.html]: https://github.com/google/docsy/blob/main/theme/layouts/_partials/scripts/plugins.html
 [quality]: /project/quality/script-loading/
 [ug-config-merge]: /docs/content/configuration/#theme-defaults-and-your-overrides
+[ug-config]: /docs/content/plugins/#configuration-reference
 [ug-flags]: /docs/content/plugins/#page-flags-in-included-content
 [ug-files]: /docs/content/plugins/#plugin-files
 [ug-plugins]: /docs/content/plugins/

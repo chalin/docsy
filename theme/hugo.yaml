@@ -4,13 +4,11 @@ params:
   rss_sections: [blog]
   docsy:
     plugins:
-      click-to-copy: { defer: true }
-      tabpane-persist: {}
-      markmap: { enable: false, pageGate: hasMarkmap }
+      click-to-copy: { enable: true, defer: true }
+      tabpane-persist: { enable: true }
+      markmap: { enable: false, pageGate: hasMarkmap, version: 0.18.12 }
   katex:
     version: 0.18.4
-  markmap:
-    version: 0.18.12
   mermaid:
     version: 11.17.2
   redoc:
