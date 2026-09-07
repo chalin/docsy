@@ -655,20 +655,9 @@ Docsy renders `markmap` fences through its own code-block render hook,
 `layouts/_markup/render-codeblock-markmap.html`; to change how they render,
 shadow that file.
 
-MarkMap scripts load only on pages containing a `markmap` code block. If you
-produce MarkMap markup some other way (raw HTML, your own render hook, the `tab`
-or `readfile code="true"` shortcodes with `lang=markmap`, a fence in content
-pulled in with `.Content`, or a printed section), clear the entry's gate so the
-scripts load site-wide ([why][page-flags]):
-
-```yaml
-params:
-  docsy:
-    plugins:
-      markmap:
-        enable: true
-        pageGate: ''
-```
+By default, MarkMap scripts load only on pages that contain a `markmap` code
+block. If a mind map renders as a plain code block instead, see
+[When a MarkMap doesn't render](#when-a-markmap-doesnt-render).
 
 The entry's `options` take a `height` for the rendered map, a [CSS length][].
 The default is `300px`, which also applies when the value isn't a valid length:
@@ -717,11 +706,35 @@ merging][config-merge].
 - The autoloader itself loads MarkMap's runtime libraries from a public CDN in
   the browser, at versions it pins but without subresource integrity.
 
+### When a MarkMap doesn't render
+
+With the plugin [enabled](#activating-markmap-support), a mind map that stays a
+plain code block is on a page that didn't load the MarkMap scripts. Docsy's
+render hook flags a page for MarkMap when it renders a `markmap` code block;
+these paths miss the hook, or flag a different page ([why][page-flags]):
+
+- raw HTML
+- your own render hook, unless it keeps the hook's
+  `{{ .Page.Store.Set "hasMarkmap" true }}` line and Hugo's default code-block
+  markup, which the script looks for
+- the `tab` or `readfile code="true"` shortcodes with `lang=markmap`
+- a fence in content pulled in with `.Content`
+- a printed section
+
+To load the scripts on every page, set the flag yourself from a
+[`hooks/head-end.html`][head-end] partial in your project (not the body-end
+hook, which runs after the scripts are emitted):
+
+```go-html-template
+{{ .Page.Store.Set "hasMarkmap" true }}
+```
+
 [config-merge]: /docs/content/configuration/#theme-defaults-and-your-overrides
 [CSS length]:
   https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/length
 [markmap-autoloader]: https://www.npmjs.com/package/markmap-autoloader
 [page-flags]: /docs/content/plugins/#page-flags-in-included-content
+[head-end]: /docs/content/lookandfeel/#add-code-to-head-or-before-body-end
 
 ## Diagrams with Diagrams.net
 

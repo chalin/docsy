@@ -17,23 +17,34 @@ The template's comments carry the mechanics and their rationale. The loop reads
 the theme's schema through `hugo.Data`; the guide [renders the same
 file][guide-config], so the entry contract has one home.
 
-## Pre-registry parameters
+## Shims
 
-A plugin whose behavior a parameter controlled before the registry ships a shim
-partial, `_partials/scripts/plugins/`_`NAME`_`_docsy-shim.html` (the suffix the
-schema reserves). The loop applies it to the plugin's merged entry before the
-enable and gate checks, invoked with `(dict "Page" PAGE "Plugin" ENTRY)`. It
-must return the entry it received, adjusted with `merge`, so the fields it
-leaves alone keep their normalized values; anything but a map fails the build.
-Parameter-specific behavior lives in the shim, and the shim is deleted when its
-parameter's deprecation cycle ends.
+For when to add or replace a shim, see the guide's [Adjust a plugin per
+page][guide-shims]; this section is the contract.
+
+The loop resolves a shim by registry name with the schema's reserved
+`_docsy-shim` suffix and, when the partial exists, invokes it with
+`(dict "Page" PAGE "Plugin" ENTRY)`: the page being rendered, and the merged,
+normalized entry. The call comes after normalization, sorting, and name
+validation, so a shim cannot reorder emission. It comes before the
+required-field and `version` guards, the enable check, and asset lookup, so a
+shim runs for a disabled entry too, and what it returns is what those two guards
+test.
+
+The partial must return the entry it received, adjusted with `merge` so the
+fields it leaves alone keep their normalized values; anything but a map fails
+the build.
+
+A shim is also where a plugin gates itself: on a page that doesn't need the
+plugin, it returns the entry with `enable` false ([Gating
+decisions][design-gating]). When support for a deprecated parameter ends, remove
+its mapping and warning from the shim and keep the rest.
 
 ## Shape guards
 
 Enforcement is hand-coded in the loop against the schema; what each guard warns
-about, ignores, or empties is the guide's [Warnings][guide-warnings] list. After
-the shim, the required-field and `version` guards run, followed by the enable
-check, asset lookup, and page gate; a refused version skips the entry.
+about, ignores, or empties is the guide's [Warnings][guide-warnings] list. A
+refused `version` skips the entry.
 
 ## Build and emission
 
@@ -51,12 +62,14 @@ authors][guide-security]. In addition:
 - Residual exposure, disclosed in the guide's [MarkMap version][guide-markmap]
   section: the autoloader's runtime libraries.
 - Imported Hugo modules are trusted: their `params` merge into the site's, so a
-  module can register, re-gate, or turn off plugins, as it already supplies
-  layouts and assets.
+  module can register or turn off plugins, and its layouts can shim them, as it
+  already supplies layouts and assets.
 
 <!-- prettier-ignore-start -->
 [design]: /project/design/script-loading/
 [design-ordering]: /project/design/script-loading/#ordering-decisions
+[design-gating]: /project/design/script-loading/#gating-decisions
+[guide-shims]: /docs/content/plugins/#adjust-a-plugin-per-page
 [guide]: /docs/content/plugins/
 [guide-config]: /docs/content/plugins/#configuration-reference
 [guide-files]: /docs/content/plugins/#plugin-files

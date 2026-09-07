@@ -36,11 +36,10 @@ integrations onto the [plugin loop](#plugin-loop):
   MarkMap autoloader, vendored at build time and served same-origin with SRI.
 
 Gating lives at two levels. The dispatcher gates PlantUML (site param) and
-Mermaid and KaTeX (`.Page.Store` flags); the plugin loop's `pageGate` carries
-the same page-flag pattern for MarkMap (`hasMarkmap`), while the remaining
-sub-partials gate internally (Algolia search configuration, Prism, search bundle
-choice, dark mode, ScrollSpy). Tab persistence ships ungated
-([why](#gating-decisions)).
+Mermaid and KaTeX (`.Page.Store` flags); MarkMap's plugin shim carries the same
+page-flag pattern (`hasMarkmap`), while the remaining sub-partials gate
+internally (Algolia search configuration, Prism, search bundle choice, dark
+mode, ScrollSpy). Tab persistence ships ungated ([why](#gating-decisions)).
 
 ## The dispatcher as a seam
 
@@ -60,7 +59,7 @@ The decomposition has two design consequences:
   paths did not work (the internal template names `algolia/head` and
   `algolia/scripts` no longer exist).
 - Per plugin: the script asset `assets/js/plugins/NAME.js`, its companion
-  partial, and its companion stylesheet ([file contract][ug-files]).
+  partial, its companion stylesheet, and its shim ([file contract][ug-files]).
 
 ## The plugin loop {#plugin-loop}
 
@@ -78,7 +77,7 @@ defaults][ug-config-merge]), so a site's map layers over the theme's:
 
 - **Supersession and inheritance come free**: a site entry for a theme plugin
   merges field by field (`markmap: { enable: true }` keeps the theme's
-  `pageGate`).
+  `version`).
 - **Duplicates are impossible**: map keys are unique. The loop needs no
   deduplication, no first-wins rule, no supersession bookkeeping.
 - **A plugin dependency's version pin is an entry field**, not an option and not
@@ -95,9 +94,8 @@ defaults][ug-config-merge]), so a site's map layers over the theme's:
   shortcode arguments only).
 - **The loop is generic**: it knows no plugin names. Theme defaults are
   configuration, not template code; plugin-specific behavior lives in the
-  plugin's own files: its script, its companion partial, and, for parameters
-  that predate the registry, a per-plugin shim partial that decorates the
-  plugin's entry.
+  plugin's own files: its script, its companions, and its shim, which adjusts
+  the entry per page ([shims][ug-shims]).
 - **Plugins use site configuration**: language-specific site parameters apply;
   page front matter does not define registry entries.
 
@@ -128,6 +126,18 @@ idiom.
   content][ug-flags]). MarkMap (hook-flagged) is gated by default; tab
   persistence (shortcode-produced) ships ungated on every page, as before 0.18:
   no flag is set for it.
+- **Gating is the plugin's, not a registry field.** The plugin's hook sets a
+  flag and its shim reads it, the pairing the dispatcher uses for `hasmermaid`
+  and `hasMath`; a site widens a gate by setting the flag from
+  `hooks/head-end.html` ([MarkMap guide][ug-markmap-render]). A gate field in
+  configuration would be a flag name kept in sync with the hook by convention,
+  and no site needs one; across static-site generators, per-page loading is the
+  theme's call with no switch, and where a switch exists it is an enum, never a
+  flag name.
+- **Design of record for a switch**, should a second gated core plugin or a
+  plugin author ask for one: `scope: site | page` on the entry, with the theme
+  declaring each plugin's default. For an including page that needs a gated
+  plugin, the shape is a per-page front-matter override instead.
 - **The markmap render hook sets the flag and renders Hugo's default code
   block** (`transform.HighlightCodeBlock`), leaving the browser-side transform
   to the plugin script, so a disabled plugin leaves the fence exactly as Hugo
@@ -151,7 +161,7 @@ idiom.
   companion markup and styles being present.
 - **Body-end CSS (interim placement)**: the companion stylesheet's `<link>` is
   emitted where the loop runs (at the end of `<body>`), not in `<head>`, because
-  `pageGate` reads `.Page.Store` flags that are only reliable after content
+  gating shims read `.Page.Store` flags that are only reliable after content
   render. Moving companion CSS into the head is a possible later refinement, and
   has to solve that constraint or gated CSS silently drops ([#2789][]).
 
@@ -169,6 +179,8 @@ idiom.
 [ug-config-merge]: /docs/content/configuration/#theme-defaults-and-your-overrides
 [ug-config]: /docs/content/plugins/#configuration-reference
 [ug-flags]: /docs/content/plugins/#page-flags-in-included-content
+[ug-shims]: /docs/content/plugins/#adjust-a-plugin-per-page
+[ug-markmap-render]: /docs/content/diagrams-and-formulae/#when-a-markmap-doesnt-render
 [ug-files]: /docs/content/plugins/#plugin-files
 [ug-plugins]: /docs/content/plugins/
 [scripts-dir]: https://github.com/google/docsy/blob/main/theme/layouts/_partials/scripts/

@@ -10,11 +10,11 @@ Docsy loads some of its optional JavaScript features, and any script you add, as
 
 ## Configure Docsy's plugins
 
-| Plugin            | What it does                               | Default                                 | Loads on                                            | Docs                           |
-| ----------------- | ------------------------------------------ | --------------------------------------- | --------------------------------------------------- | ------------------------------ |
-| `click-to-copy`   | Adds a copy button to code blocks          | On (off under Prism, which has its own) | Every page                                          | [Copy to clipboard][]          |
-| `tabpane-persist` | Remembers the selected tab across pages    | On                                      | Every page ([why](#page-flags-in-included-content)) | [`tabpane`][]                  |
-| `markmap`         | Renders `markmap` code blocks as mind maps | Off                                     | Pages with a `markmap` code block                   | [Activating MarkMap support][] |
+| Plugin            | What it does (Default / Loads on)                                                                  | Learn more                     |
+| ----------------- | -------------------------------------------------------------------------------------------------- | ------------------------------ |
+| `click-to-copy`   | Adds a copy button to code blocks (On, but off under Prism, which has its own / Every page)        | [Copy to clipboard][]          |
+| `tabpane-persist` | Remembers the selected tab across pages (On / Every page ([why](#page-flags-in-included-content))) | [`tabpane`][]                  |
+| `markmap`         | Renders `markmap` code blocks as mind maps (Off / Pages with a `markmap` code block)               | [Activating MarkMap support][] |
 
 To turn a plugin off, set its `enable` field to `false`:
 
@@ -85,8 +85,8 @@ Every registry shape warning carries the id `docsy-config` (to silence one, see
 - An empty registry after configuration merging warns; a registry with all
   entries disabled is valid.
 - An enabled name with no script file ([Plugin files](#plugin-files)) is a
-  different fault: it warns `docsy-plugin-missing`, gated or not (a disabled
-  entry is never looked up).
+  different fault: it warns `docsy-plugin-missing` (a disabled entry is never
+  looked up).
 
 `version` validation applies to entries not already dropped by the shape guards,
 including disabled entries. An exact `X.Y.Z` passes without a version warning;
@@ -137,19 +137,44 @@ params:
 
 ### Plugin files
 
-A plugin is one to three files. A project file shadows the theme's of the same
-name, which is how you replace one of Docsy's plugins or its companions.
+A project file shadows the theme's of the same name, which is how you replace
+one of Docsy's plugins, its companions, or its shim.
 
-| File                                                | Contract                                                                                                                   |
-| --------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| `assets/js/plugins/`_`NAME`_`.js`                   | Required. Built on its own with [`js.Build`][]; `options` reach it as [`@params`][].                                       |
-| `layouts/_partials/scripts/plugins/`_`NAME`_`.html` | Optional companion partial for vendored libraries, markup, or configuration; receives `(dict "Page" PAGE "Plugin" ENTRY)`. |
-| `assets/scss/plugins/`_`NAME`_`.scss`               | Optional companion stylesheet, through the Sass pipeline.                                                                  |
+| File                                                           | Contract                                                                                                                   |
+| -------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `assets/js/plugins/`_`NAME`_`.js`                              | Required. Built on its own with [`js.Build`][]; `options` reach it as [`@params`][].                                       |
+| `layouts/_partials/scripts/plugins/`_`NAME`_`.html`            | Optional companion partial for vendored libraries, markup, or configuration; receives `(dict "Page" PAGE "Plugin" ENTRY)`. |
+| `assets/scss/plugins/`_`NAME`_`.scss`                          | Optional companion stylesheet, through the Sass pipeline.                                                                  |
+| `layouts/_partials/scripts/plugins/`_`NAME`_`_docsy-shim.html` | Optional shim partial; [adjust a plugin per page](#adjust-a-plugin-per-page).                                              |
 
 Companions emit before the script ([why][design-ordering]). Script and
 stylesheet tags carry [subresource integrity][SRI] in every environment. Entry
-keys reach templates and plugin scripts lowercase: `.Plugin.pagegate`,
-`params.apikey` ([Configuration § Key spelling][config-keys]).
+keys reach templates and plugin scripts lowercase: an option `apiKey` is
+`params.apikey` in the script ([Configuration § Key spelling][config-keys]).
+
+### Adjust a plugin per page
+
+A **shim** adjusts a plugin's registry entry for each page before the plugin
+loads. Add one for your own plugin, or for one of Docsy's. Two of Docsy's
+plugins ship a shim, `markmap` and `click-to-copy`: your file replaces it, gate,
+Prism guard, and deprecated-parameter handling included, so start from a copy of
+the theme's file, in [`scripts/plugins/`][theme-shims].
+
+Create `layouts/_partials/scripts/plugins/`_`NAME`_`_docsy-shim.html`, with the
+plugin's registry name as _`NAME`_ ([shim contract][impl-shim]):
+
+```go-html-template
+{{ $entry := .Plugin -}}
+{{ if not (.Page.Store.Get "hasMyFeature") -}}
+  {{ $entry = merge $entry (dict "enable" false) -}}
+{{ end -}}
+{{ return $entry -}}
+```
+
+That shim loads the plugin only on pages that use it: a render hook of yours
+sets the flag with `.Page.Store.Set` where the feature's markup appears. Before
+relying on a flag, read
+[Page flags in included content](#page-flags-in-included-content).
 
 ### Dependency versions
 
@@ -181,14 +206,15 @@ theme-provided pin, see [MarkMap version][markmap-version].
 - Vendor build-time fetches and serve them with SRI.
 - Use no loader that pulls unpinned secondary code, which SRI on the loader
   can't cover.
-- A plugin that loads remote code gets a `pageGate` (a flag your own render hook
-  sets with `.Page.Store.Set`), so its code ships only where used.
+- Load remote code only on pages that use it:
+  [gate the plugin with a shim](#adjust-a-plugin-per-page).
 
 ## Page flags in included content
 
-Some plugins load only on pages that need them: a `pageGate` names a page flag,
-and Docsy's `markmap` render hook sets one whenever a page has a `markmap` code
-block. A flag counts only when it lands on the page that ships.
+Some plugins load only on pages that need them: Docsy's `markmap` render hook
+sets a page flag whenever a page has a `markmap` code block, and the plugin
+ships where the flag is set. A flag counts only when it lands on the page whose
+output the plugin is emitted into.
 
 - A **render hook** runs in the context of the page being rendered, so a
   `markmap` block in content pulled in through [`.RenderShortcodes`][] flags the
@@ -199,13 +225,14 @@ block. A flag counts only when it lands on the page that ships.
 - Content pulled in through `.Content` flags the included page in both cases.
 
 That is why Docsy ships `tabpane-persist` ungated, on every page: tabpanes come
-from a shortcode. For MarkMap's authoring paths and how to clear its gate, see
-[Activating MarkMap support][].
+from a shortcode. For MarkMap's authoring paths and the remedy, see [When a
+MarkMap doesn't render][].
 
 <!-- prettier-ignore-start -->
 [`.RenderShortcodes`]: https://gohugo.io/methods/page/rendershortcodes/
 [`tabpane`]: /docs/content/shortcodes/#tabpane
 [Activating MarkMap support]: /docs/content/diagrams-and-formulae/#activating-markmap-support
+[When a MarkMap doesn't render]: /docs/content/diagrams-and-formulae/#when-a-markmap-doesnt-render
 [Copy to clipboard]: /docs/content/lookandfeel/#copy-to-clipboard
 [head and body hooks]: /docs/content/lookandfeel/#add-code-to-head-or-before-body-end
 [`@params`]: https://gohugo.io/functions/js/build/#params
@@ -217,6 +244,8 @@ from a shortcode. For MarkMap's authoring paths and how to clear its gate, see
 [config-warnings]: /docs/content/configuration/#configuration-warnings
 [design-ordering]: /project/design/script-loading/#ordering-decisions
 [markmap-version]: /docs/content/diagrams-and-formulae/#markmap-version
+[impl-shim]: /project/implementation/script-loading/#shims
+[theme-shims]: https://github.com/google/docsy/tree/main/theme/layouts/_partials/scripts/plugins
 [theme-defaults]: https://github.com/google/docsy/blob/main/theme/hugo.yaml
 [SRI]: https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity
 <!-- prettier-ignore-end -->
