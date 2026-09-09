@@ -145,7 +145,7 @@
     "via": "lychee",
   },
   "https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/length": {
-    "status": 200,
+    "result": 200,
     "when": "2026-09-05T15:27:29Z",
     "via": "lychee",
   },
@@ -175,7 +175,7 @@
     "via": "lychee",
   },
   "https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity": {
-    "status": 200,
+    "result": 200,
     "when": "2026-09-03T19:38:47Z",
     "via": "lychee",
   },
@@ -776,7 +776,7 @@
   },
   "https://github.com/chalin/link-cache#readme": {
     "result": 200,
-    "when": "2026-09-03T20:42:17Z",
+    "when": "2026-09-09T14:27:31Z",
     "via": "lychee",
   },
   "https://github.com/cloudwego/cloudwego.github.io": {
@@ -1081,7 +1081,7 @@
   },
   // New-test seed: goes live when the plugin conversions (#2791) merge.
   "https://github.com/google/docsy/blob/main/tests/fixture-site/click-to-copy-plugin.test.mjs": {
-    "status": 206,
+    "result": 206,
     "when": "2026-09-03T09:40:00Z",
     "via": "manual",
     "expires": "2026-10-15",
@@ -1093,7 +1093,7 @@
   },
   // New-test seed: goes live when the plugin conversions (#2791) merge.
   "https://github.com/google/docsy/blob/main/tests/fixture-site/markmap-plugin.test.mjs": {
-    "status": 206,
+    "result": 206,
     "when": "2026-09-03T09:40:00Z",
     "via": "manual",
     "expires": "2026-10-15",
@@ -1120,7 +1120,7 @@
   },
   // New-test seed: goes live when the plugin conversions (#2791) merge.
   "https://github.com/google/docsy/blob/main/tests/fixture-site/tabpane-persist-plugin.test.mjs": {
-    "status": 206,
+    "result": 206,
     "when": "2026-09-03T09:40:00Z",
     "via": "manual",
     "expires": "2026-10-15",
@@ -1981,7 +1981,7 @@
     "via": "lychee",
   },
   "https://github.com/google/docsy/issues/new?title=Configuration": {
-    "status": 200,
+    "result": 200,
     "when": "2026-09-05T11:43:21Z",
     "via": "lychee",
   },
@@ -2176,7 +2176,7 @@
     "via": "lychee",
   },
   "https://github.com/google/docsy/issues/new?title=Plugins": {
-    "status": 200,
+    "result": 200,
     "when": "2026-09-04T21:11:11Z",
     "via": "lychee",
   },
@@ -2946,12 +2946,12 @@
     "via": "lychee",
   },
   "https://github.com/google/docsy/pull/2786": {
-    "status": 200,
+    "result": 200,
     "when": "2026-09-03T01:13:43Z",
     "via": "lychee",
   },
   "https://github.com/google/docsy/pull/2791": {
-    "status": 200,
+    "result": 200,
     "when": "2026-09-03T09:39:38Z",
     "via": "lychee",
   },
@@ -3183,7 +3183,7 @@
     "via": "lychee",
   },
   "https://github.com/google/docsy/tree/main/tests/visual": {
-    "status": 200,
+    "result": 200,
     "when": "2026-09-07T09:00:43Z",
     "via": "lychee",
   },
@@ -3208,7 +3208,7 @@
     "via": "lychee",
   },
   "https://github.com/google/docsy/tree/main/theme/layouts/_partials/scripts/plugins": {
-    "status": 200,
+    "result": 200,
     "when": "2026-09-07T16:21:55Z",
     "via": "lychee",
   },
@@ -3633,7 +3633,7 @@
     "via": "lychee",
   },
   "https://gohugo.io/configuration/introduction/#merge-configuration-settings": {
-    "status": 200,
+    "result": 200,
     "when": "2026-09-05T11:43:21Z",
     "via": "lychee",
   },
@@ -3808,12 +3808,12 @@
     "via": "lychee",
   },
   "https://gohugo.io/functions/js/build/": {
-    "status": 200,
+    "result": 200,
     "when": "2026-09-05T11:43:21Z",
     "via": "lychee",
   },
   "https://gohugo.io/functions/js/build/#params": {
-    "status": 200,
+    "result": 200,
     "when": "2026-09-03T19:42:01Z",
     "via": "lychee",
   },
@@ -3933,7 +3933,7 @@
     "via": "lychee",
   },
   "https://gohugo.io/methods/page/rendershortcodes/": {
-    "status": 200,
+    "result": 200,
     "when": "2026-09-04T20:51:32Z",
     "via": "lychee",
   },
@@ -4281,7 +4281,7 @@
   },
   // New-page seed: goes live when the plugin conversions (#2791) deploy.
   "https://main--docsydocs.netlify.app/docs/content/configuration/": {
-    "status": 206,
+    "result": 206,
     "when": "2026-09-05T11:50:00Z",
     "via": "manual",
     "expires": "2026-10-15",
@@ -4312,7 +4312,7 @@
     "via": "lychee",
   },
   "https://main--docsydocs.netlify.app/docs/content/plugins/": {
-    "status": 206,
+    "result": 206,
     "when": "2026-09-04T21:15:00Z",
     "via": "manual",
     "expires": "2026-10-15",
@@ -5129,7 +5129,7 @@
   },
   // New-page seed: goes live when the plugin conversions (#2791) deploy.
   "https://www.docsy.dev/docs/content/configuration/": {
-    "status": 206,
+    "result": 206,
     "when": "2026-09-05T11:50:00Z",
     "via": "manual",
     "expires": "2026-10-15",
@@ -5160,7 +5160,7 @@
     "via": "lychee",
   },
   "https://www.docsy.dev/docs/content/plugins/": {
-    "status": 206,
+    "result": 206,
     "when": "2026-09-04T21:15:00Z",
     "via": "manual",
     "expires": "2026-10-15",
