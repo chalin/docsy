@@ -1,4 +1,5 @@
-// Pins click-to-copy's registry conversion and its legacy opt-outs.
+// Pins click-to-copy's registry conversion, its fixed deferred loading, and
+// its legacy opt-outs.
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -8,7 +9,7 @@ const files = {
   'content/_index.md': '---\ntitle: Home\n---\n\n```sh\necho hi\n```\n',
 };
 
-test('click-to-copy ships as a deferred plugin by default', () => {
+test('click-to-copy ships deferred', () => {
   const r = buildSite('c2c-default', {
     files,
     title: 'Docsy copy-button fixture',
@@ -29,6 +30,61 @@ test('click-to-copy ships as a deferred plugin by default', () => {
     /src="\/js\/click-to-copy/,
     'page is free of the pre-plugin script path',
   );
+});
+
+// One build per configuration layer, so a value swallowed by one layer can't
+// hide behind another's. Each layer also sets `version: latest` on the same
+// entry: the floating-version warning it draws proves the entry arrived. (For
+// the env layer that proves the entry's path, not the DEFER key itself, which
+// plugins.test.mjs covers on a sibling entry.)
+const deferredTag =
+  /<script[^>]*\bdefer\b[^>]*src="\/js\/plugins\/click-to-copy[^"]*\.js"/;
+const arrivalWarning = /click-to-copy-floating-version/;
+
+test('a site defer false still defers click-to-copy', () => {
+  const r = buildSite('c2c-site-defer-false', {
+    files,
+    title: 'Docsy copy-button site-defer fixture',
+    extraConfig: `params:
+  docsy:
+    plugins:
+      click-to-copy: { defer: false, version: latest }
+`,
+  });
+  assert.equal(r.status, 0, `hugo build succeeds:\n${r.stderr}`);
+  assert.match(r.stderr, arrivalWarning, 'site entry reaches the loop');
+  assert.match(r.publicFile('index.html'), deferredTag, 'plugin tag defers');
+});
+
+test('a language defer false still defers click-to-copy', () => {
+  const r = buildSite('c2c-language-defer-false', {
+    files,
+    title: 'Docsy copy-button language-defer fixture',
+    extraConfig: `languages:
+  en:
+    params:
+      docsy:
+        plugins:
+          click-to-copy: { defer: false, version: latest }
+`,
+  });
+  assert.equal(r.status, 0, `hugo build succeeds:\n${r.stderr}`);
+  assert.match(r.stderr, arrivalWarning, 'language entry reaches the loop');
+  assert.match(r.publicFile('index.html'), deferredTag, 'plugin tag defers');
+});
+
+test('an environment defer false still defers click-to-copy', () => {
+  const r = buildSite('c2c-env-defer-false', {
+    files,
+    title: 'Docsy copy-button env-defer fixture',
+    env: {
+      'HUGOxPARAMSxDOCSYxPLUGINSxCLICK-TO-COPYxDEFER': 'false',
+      'HUGOxPARAMSxDOCSYxPLUGINSxCLICK-TO-COPYxVERSION': 'latest',
+    },
+  });
+  assert.equal(r.status, 0, `hugo build succeeds:\n${r.stderr}`);
+  assert.match(r.stderr, arrivalWarning, 'env entry reaches the loop');
+  assert.match(r.publicFile('index.html'), deferredTag, 'plugin tag defers');
 });
 
 test('disable_click2copy_chroma ships zero copy-button bytes', () => {

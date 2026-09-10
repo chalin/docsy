@@ -48,14 +48,15 @@ gate-to-partial wiring, offline.
   suffix refused, unknown fields warned), the `version` guard's [warning and
   error policy][guide-warnings].
 - **Layering**: theme plugins through Hugo's config merge (inheritance,
-  override, turn-off).
+  turn-off) and a site field over a schema default.
 
 Three companion nets pin the conversions:
 
 - [`tabpane-persist-plugin.test.mjs`][tabpane-test]: the ungated default,
   persistence opt-out, and theme-plugin shadowing.
 - [`markmap-plugin.test.mjs`][markmap-test] and
-  [`click-to-copy-plugin.test.mjs`][c2c-test]: the per-conversion contracts. The
+  [`click-to-copy-plugin.test.mjs`][c2c-test]: the per-conversion contracts,
+  click-to-copy's fixed deferred loading per configuration layer included. The
   markmap cases stub the vendoring companion with a marker to stay offline; the
   real vendor fetch is covered by the
   [build-time vendoring net](#build-time-vendoring).
@@ -77,7 +78,7 @@ behavior.
 
 ## Runtime nets
 
-Two browser nets under `tests/visual/`:
+Three browser nets under `tests/visual/`:
 
 - [`js-runtime.test.mjs`][runtime-test] loads representative fixture pages in a
   real browser and asserts that no uncaught exception or in-scope console error
@@ -96,6 +97,11 @@ Two browser nets under `tests/visual/`:
 - [`plugins-runtime.test.mjs`][plugin-runtime-test] proves an emitted plugin
   actually executes: its DOM effects land. A static-markup check can bless
   output whose runtime is broken (a botched build); this net can't.
+- [`click-to-copy-runtime.test.mjs`][c2c-runtime-test] proves the copy button's
+  [fixed deferred loading][guide-c2c-defer] beyond tags. Under a site's
+  conflicting `defer: false`, real clicks copy the text of a block emitted
+  before the plugin tag and of one the body-end hook emits after it, asserted on
+  the clipboard, which headless Chrome keeps process-local. Offline.
 
 ## Red-proof rationale
 
@@ -113,15 +119,21 @@ safeguard proves the signal:
   throws and drops a same-origin script must have both reported, so a silent
   collector (wrong event names, races, a broken filter) can't masquerade as
   all-green.
+- The copy net seeds the clipboard with a unique token before every click and
+  waits for the contents to change, so a click that writes nothing can't pass on
+  stale contents. Before the fix, the synchronous load left the hook block
+  without a button.
 
 <!-- prettier-ignore-start -->
 [#1436]: https://github.com/google/docsy/issues/1436
 [acceptance-test]: https://github.com/google/docsy/blob/main/tests/fixture-site/plugins-acceptance.test.mjs
+[c2c-runtime-test]: https://github.com/google/docsy/blob/main/tests/visual/click-to-copy-runtime.test.mjs
 [c2c-test]: https://github.com/google/docsy/blob/main/tests/fixture-site/click-to-copy-plugin.test.mjs
 [design]: /project/design/script-loading/
 [dispatch-test]: https://github.com/google/docsy/blob/main/tests/fixture-site/scripts-dispatch.test.mjs
 [golden-test]: https://github.com/google/docsy/blob/main/tests/fixture-site/scripts-golden.test.mjs
 [goldens-lib]: https://github.com/google/docsy/blob/main/tests/fixture-site/lib/scripts-goldens.mjs
+[guide-c2c-defer]: /docs/content/plugins/#configuration-reference
 [guide-warnings]: /docs/content/plugins/#warnings
 [implementation]: /project/implementation/script-loading/
 [loop-test]: https://github.com/google/docsy/blob/main/tests/fixture-site/plugins.test.mjs
