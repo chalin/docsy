@@ -334,30 +334,64 @@ test('manifests: theme-owned dependencies stay out of the root manifest', () => 
   }
 });
 
-// npm applies overrides only while re-resolving and trusts an in-sync
-// lock as-is, so the adm-zip override (GHSA-xcpc-8h2w-3j85, via
-// hugo-extended) is pinned from the committed manifests: the lock must
-// carry the fixed version, and the override must stay justified by
-// hugo-extended's own declared range. When hugo-extended bumps that
-// range past the vulnerable one, this goes red: drop the override (and
-// this test) in that bump PR.
-test('locks and manifests: the adm-zip override is applied and still needed', () => {
+// npm ci validates the lock only where its ideal tree lands, so a nested
+// override-violating copy, a dropped override, or the theme's override-free
+// lock all pass it; and npm never says an override became unnecessary. When
+// a parent changes its declared range, its row goes red: reassess, and drop
+// the override (and the row) if the parent now resolves past the vulnerable
+// versions.
+const REVIEWED_OVERRIDES = {
+  // GHSA-xcpc-8h2w-3j85
+  'adm-zip': {
+    spec: '^0.6.0',
+    fixed: /^0\.6\.\d+$/,
+    parent: 'hugo-extended',
+    parentRange: '^0.5.17',
+  },
+  // GHSA-7w5x-hrqm-74c2
+  'smol-toml': {
+    spec: '^1.7.1',
+    fixed: /^1\.(7\.[1-9]\d*|(?:[89]|[1-9]\d+)\.\d+)$/,
+    parent: 'markdownlint-cli2',
+    parentRange: '1.7.0',
+  },
+};
+
+test('locks and manifests: security overrides are applied and still needed', () => {
   assert.deepEqual(
-    readJSON('package.json').overrides,
-    { 'adm-zip': '^0.6.0' },
-    'overrides carries exactly the reviewed entries',
-  );
-  const pkgs = locks['package-lock.json'].packages;
-  assert.match(
-    pkgs['node_modules/adm-zip'].version,
-    /^0\.6\./,
-    'the locked adm-zip carries the GHSA-xcpc-8h2w-3j85 fix',
+    rootManifest.overrides ?? {},
+    Object.fromEntries(
+      Object.entries(REVIEWED_OVERRIDES).map(([name, o]) => [name, o.spec]),
+    ),
+    'root overrides carries exactly the reviewed entries',
   );
   assert.equal(
-    pkgs['node_modules/hugo-extended'].dependencies['adm-zip'],
-    '^0.5.17',
-    'hugo-extended declares the adm-zip range that justifies the override',
+    readJSON('theme/package.json').overrides,
+    undefined,
+    'theme manifest declares no overrides',
   );
+  for (const [name, o] of Object.entries(REVIEWED_OVERRIDES)) {
+    // Every copy in every lock, hoisted or nested: npm may leave a
+    // vulnerable one under the parent's own node_modules, and the root
+    // override doesn't reach the theme's standalone lock.
+    const nodes = Object.entries(locks).flatMap(([lock, { packages }]) =>
+      Object.keys(packages)
+        .filter((k) => k.endsWith(`node_modules/${name}`))
+        .map((k) => [`${lock} ${k}`, packages[k]]),
+    );
+    assert.ok(nodes.length > 0, `${name} is in a lock`);
+    for (const [node, pkg] of nodes) {
+      assert.match(pkg.version, o.fixed, `${node} carries the fix`);
+    }
+    const parent =
+      locks['package-lock.json'].packages[`node_modules/${o.parent}`];
+    assert.ok(parent, `${o.parent} is hoisted in the root lock`);
+    assert.equal(
+      parent.dependencies[name],
+      o.parentRange,
+      `${o.parent} declares the ${name} range that justifies the override`,
+    );
+  }
 });
 
 // Byte-exact reviewed forms of the scripts that hold install or
