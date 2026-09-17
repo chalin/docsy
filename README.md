@@ -103,8 +103,12 @@ npm scripts in this repo run under Bash on every platform (`script-shell` pin in
 ## Contributing
 
 For details on our [code of conduct][] and the process for submitting pull
-requests, see [CONTRIBUTING.md][]. Thank you to all past, present, and future
-[contributors][]!
+requests, see [CONTRIBUTING.md][].
+
+Please see the [Technical Charter][] for additional information on governance
+and contribution guidelines.
+
+Thank you to all past, present, and future [contributors][]!
 
 ## License
 
@@ -123,5 +127,7 @@ This project is licensed under the Apache License 2.0, see
 [official-support]:
   https://www.docsy.dev/project/about/changelog/#official-support
 [releases]: https://github.com/google/docsy/releases
+[Technical Charter]:
+  https://github.com/docsy/docsy/blob/main/docsy-technical-charter.pdf
 
 <!-- cSpell:ignore docsy -->
