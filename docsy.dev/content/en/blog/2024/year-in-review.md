@@ -44,12 +44,12 @@ introducing at least one major feature enhancement. Highlights include:
     compatibility.
   - Addressed breaking changes resulting from the major core upgrade to Hugo
     0.123.0.
-- **[0.11.0](https://github.com/google/docsy/releases/tag/v0.11.0):**
+- **[0.11.0](https://github.com/docsy/docsy/releases/tag/v0.11.0):**
   - Enhanced internationalization by reintroducing **Right-To-Left (RTL)
     language support** using Bootstrap's RTL capabilities.
 
-[#2]: https://github.com/google/docsy/issues/2
-[Bootstrap 5 migration]: https://github.com/google/docsy/issues/470
+[#2]: https://github.com/docsy/docsy/issues/2
+[Bootstrap 5 migration]: https://github.com/docsy/docsy/issues/470
 
 ## Major feature enhancements {#enhancements}
 
@@ -66,8 +66,8 @@ We plan on [enabling dark mode][] in the [Docsy example][], for even easier
 adoption. Dark mode has already been adopted in notable projects like
 OpenTelemetry ([opentelemetry.io#4023][]).
 
-[enabling dark mode]: https://github.com/google/docsy-example/issues/285
-[Docsy example]: https://github.com/google/docsy-example
+[enabling dark mode]: https://github.com/docsy/docsy-example/issues/285
+[Docsy example]: https://github.com/docsy/docsy-example
 [opentelemetry.io#4023]:
   https://github.com/open-telemetry/opentelemetry.io/issues/4023
 
@@ -88,7 +88,7 @@ RTL support has been requested by major Docsy-based sites, including the two
 - [OpenTelemetry][]:
   - [Add Persian version of website pages #4990](https://github.com/open-telemetry/opentelemetry.io/issues/4990)
 
-[#1933]: https://github.com/google/docsy/pull/1933
+[#1933]: https://github.com/docsy/docsy/pull/1933
 [CNCF]: https://www.cncf.io
 [dark mode]: 0.10.0/#color-themes-and-dark-mode-support
 [Kubernetes]: https://kubernetes.io
@@ -146,10 +146,10 @@ For features tentatively planned for the first release of 2025, see [Release
 0.12.0 preparation #2108]. The most upvoted enhancement requests are currently:
 [^2]
 
-- [Navigation indication on the right TOC #349](https://github.com/google/docsy/issues/349)
-- [Repository / page-meta link fixes and improvements #1841](https://github.com/google/docsy/issues/1841),
-  particularly for [GitLab](https://github.com/google/docsy/issues/375)
-- [Drop jQuery #1436](https://github.com/google/docsy/issues/1436)
+- [Navigation indication on the right TOC #349](https://github.com/docsy/docsy/issues/349)
+- [Repository / page-meta link fixes and improvements #1841](https://github.com/docsy/docsy/issues/1841),
+  particularly for [GitLab](https://github.com/docsy/docsy/issues/375)
+- [Drop jQuery #1436](https://github.com/docsy/docsy/issues/1436)
 
 Thank you to all contributors and users who made 2024 a meaningful year for
 Docsy. Wishing you a fantastic end to 2024 and a great start to 2025! Let’s
@@ -159,10 +159,10 @@ continue creating exceptional documentation together.
 
 [^2]:
     Remember to
-    [vote for your most-desired feature](https://github.com/google/docsy/issues).
+    [vote for your most-desired feature](https://github.com/docsy/docsy/issues).
 
-[Docsy dependents]: https://github.com/google/docsy/network/dependents
+[Docsy dependents]: https://github.com/docsy/docsy/network/dependents
 [gRPC (grpc.io#1389)]: https://github.com/grpc/grpc.io/issues/1389
 [Jaeger (jaegertracing#746)]:
   https://github.com/jaegertracing/documentation/issues/746
-[Release 0.12.0 preparation #2108]: https://github.com/google/docsy/issues/2108
+[Release 0.12.0 preparation #2108]: https://github.com/docsy/docsy/issues/2108

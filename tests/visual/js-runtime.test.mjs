@@ -1,4 +1,4 @@
-// Runtime JS console-error net (google/docsy#1436): loads representative
+// Runtime JS console-error net (docsy#1436): loads representative
 // fixture-site pages in a real browser and asserts that no uncaught
 // exception or in-scope console error fires. Needs network access (real
 // CDN deps). Rationale and particulars:
@@ -60,7 +60,7 @@ const variants = {
   features: {
     options: {
       files,
-      // The crowded main menu overflows the desktop navbar, arming
+      // The crowded main menu overflows the mobile navbar, arming
       // base.js's scroll-indicator logic.
       extraConfig: `menus:
   main:
@@ -199,7 +199,7 @@ for (const { variant, page } of visits) {
 }
 
 // Behavior probes: one parity assertion per script the theme converted
-// (jQuery removal, google/docsy#1436; plugin conversions, 0.18).
+// (jQuery removal, docsy#1436; plugin conversions, 0.18).
 
 // Interaction probes carry their own pageerror collector: an exception
 // thrown by a handler mid-probe must fail the probe, not vanish once the
@@ -388,9 +388,6 @@ test('js behavior: mermaid renders with the dark theme under data-bs-theme=dark'
     await page.close();
   }
 });
-
-// offline-search probe: committing a query must pop the results popover;
-// closing it must clear the input.
 
 test('js behavior: an offline-search query pops the results popover and close clears it', async () => {
   const { page, pageErrors } = await newProbePage();
