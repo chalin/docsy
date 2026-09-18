@@ -240,7 +240,7 @@ test('locks and manifests: install scripts stay inventoried and version-pinned',
   );
   // npm resolves workspace config at the root, but --prefix/-C runs
   // suppress the workspace walk-up and read only the target directory's
-  // .npmrc: theme (the prefix-install target: install:theme-deps,
+  // .npmrc: theme (the prefix-install target for install:theme-deps and
   // _sync:theme-lock) carries a byte-identical mirror of the root file so
   // those runs keep the same posture (the .nvmrc-pair pattern,
   // toolchain-versions.test.mjs), while docsy.dev (no prefix installs)
@@ -341,10 +341,10 @@ test('manifests: theme-owned dependencies stay out of the root manifest', () => 
 // the override (and the row) if the parent now resolves past the vulnerable
 // versions.
 const REVIEWED_OVERRIDES = {
-  // GHSA-xcpc-8h2w-3j85
+  // GHSA-xcpc-8h2w-3j85, GHSA-vwc7-r8mq-g2x9
   'adm-zip': {
-    spec: '^0.6.0',
-    fixed: /^0\.6\.\d+$/,
+    spec: '^0.6.1',
+    fixed: /^0\.6\.[1-9]\d*$/,
     parent: 'hugo-extended',
     parentRange: '^0.5.17',
   },
