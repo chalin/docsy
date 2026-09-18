@@ -327,6 +327,31 @@ Docsy's theme sources:
   dart-sass compile that build-level silencing can't blind. Import-class
   warnings are tolerated until the `@use` refactor ([#2732][]).
 
+### Workflow security analysis
+
+[`zizmor.yaml`][] runs [zizmor][] over the repo's workflows in its pedantic
+persona (security audits plus workflow hygiene) on every PR, on pushes to
+`main`, and weekly, so the online audits catch advisories published against
+already-pinned actions. Results upload to the repository's Security tab as
+code-scanning alerts.
+
+- The job passes whatever it finds; findings are alerts to triage. Blocking, if
+  any, comes from a code-scanning rule in a ruleset on `main`.
+- The workflow calls the [OpenTelemetry shared workflow][otel-zizmor] at a
+  pinned commit; that workflow pins the zizmor action, which pins the zizmor
+  image by digest, so the scanner moves only when the pin here does. Review the
+  chain at each bump.
+- CI-only by design: the repo carries no tooling dependency for it. For a local
+  run, with `GH_TOKEN` set for the online audits, where _`VERSION`_ is the
+  zizmor version the workflow's latest run logs (its `zizmor vX.Y.Z` banner):
+
+  ```sh
+  uvx zizmor@VERSION --persona=pedantic .github/workflows
+  ```
+
+- `security-events: write` sits alone in this workflow, away from the jobs that
+  install or publish.
+
 ## Link checking and the link cache
 
 `test:website` checks docsy.dev's links with Lychee, caching external-link
@@ -1009,6 +1034,7 @@ To test a Docsy branch or release from a consumer site, for each site:
 [officially supports]: /project/about/changelog/#official-support
 [opentelemetry.io]: https://github.com/open-telemetry/opentelemetry.io
 [osv]: https://osv.dev/list?ecosystem=npm
+[otel-zizmor]: https://github.com/open-telemetry/shared-workflows/blob/main/zizmor/README.md
 [package.json]: <{{% param github_repo %}}/blob/main/package.json>
 [public]: /project/about/changelog/#public
 [publish workflow]: <{{% param github_repo %}}/actions/workflows/publish.yaml>
@@ -1019,4 +1045,6 @@ To test a Docsy branch or release from a consumer site, for each site:
 [theme/theme.toml]: <{{% param github_repo %}}/blob/main/theme/theme.toml>
 [themes showcase]: https://github.com/gohugoio/hugoThemesSiteBuilder#theme-configuration
 [trusted publishing]: https://docs.npmjs.com/trusted-publishers/
+[zizmor]: https://docs.zizmor.sh/
+[`zizmor.yaml`]: <{{% param github_repo %}}/blob/main/.github/workflows/zizmor.yaml>
 <!-- prettier-ignore-end -->

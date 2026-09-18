@@ -714,6 +714,7 @@ test('workflows: installs are locked and credential-isolated', () => {
   let checkouts = 0;
   let setupNodes = 0;
   let safeInstalls = 0;
+  let reusableCalls = 0;
   for (const file of files) {
     const workflow = parse(
       fs.readFileSync(path.join(workflowsDir, file), 'utf8'),
@@ -723,10 +724,31 @@ test('workflows: installs are locked and credential-isolated', () => {
       undefined,
       `${file} uses the default workflow shell`,
     );
+    // Env can invert the audited config: NPM_CONFIG_* outranks .npmrc,
+    // the shell scripts honor a HUGO override, and NODE_OPTIONS injects
+    // code into every Node process.
+    for (const key of Object.keys(workflow.env ?? {})) {
+      assert.ok(
+        envLeavesInstallConfigUntouched(key),
+        `${file} env ${key} leaves npm and Hugo config untouched`,
+      );
+    }
     for (const [jobId, job] of Object.entries(workflow.jobs ?? {})) {
       const id = `${file} ${jobId}`;
-      // A stepless job (a reusable-workflow call, say) would escape this
-      // scan; extend the audit deliberately instead.
+      // A reusable-workflow call runs code this audit doesn't walk. Any
+      // other stepless job escapes the scan; extend the audit deliberately
+      // instead.
+      if (typeof job.uses === 'string') {
+        reusableCalls += 1;
+        assert.match(
+          job.uses,
+          /^[\w-]+\/[\w.-]+\/\.github\/workflows\/[\w.-]+\.ya?ml@[0-9a-f]{40}$/,
+          `${id} calls a SHA-pinned reusable workflow`,
+        );
+        assert.equal(job.secrets, undefined, `${id} passes no secrets`);
+        assert.equal(job.steps, undefined, `${id} is a pure call job`);
+        continue;
+      }
       assert.ok(
         Array.isArray(job.steps),
         `${id} is a steps job this audit scans`,
@@ -743,13 +765,11 @@ test('workflows: installs are locked and credential-isolated', () => {
       // Env can invert the audited config: NPM_CONFIG_* outranks .npmrc,
       // the shell scripts honor a HUGO override, and NODE_OPTIONS injects
       // code into every Node process.
-      for (const env of [workflow.env, job.env]) {
-        for (const key of Object.keys(env ?? {})) {
-          assert.ok(
-            envLeavesInstallConfigUntouched(key),
-            `${id} env ${key} leaves npm and Hugo config untouched`,
-          );
-        }
+      for (const key of Object.keys(job.env ?? {})) {
+        assert.ok(
+          envLeavesInstallConfigUntouched(key),
+          `${id} env ${key} leaves npm and Hugo config untouched`,
+        );
       }
       for (const step of job.steps) {
         for (const key of Object.keys(step.env ?? {})) {
@@ -860,4 +880,5 @@ test('workflows: installs are locked and credential-isolated', () => {
   assert.ok(checkouts > 0, 'checkout steps were audited');
   assert.ok(setupNodes > 0, 'setup-node steps were audited');
   assert.ok(safeInstalls > 0, 'CI installs go through install:safe');
+  assert.ok(reusableCalls > 0, 'reusable-workflow calls were audited');
 });
