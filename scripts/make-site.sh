@@ -5,7 +5,7 @@ set -eo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 DEPS=""
-DOCSY_REPO_DEFAULT="google/docsy"
+DOCSY_REPO_DEFAULT="docsy/docsy"
 DOCSY_REPO=$DOCSY_REPO_DEFAULT
 DOCSY_VERS=""
 DOCSY_SRC="NPM"
@@ -170,7 +170,6 @@ function set_up_and_cd_into_site() {
 function _set_up_site_using_hugo_modules() {
   local user_name=$(whoami)
 
-  # The Docsy theme lives in the theme/ subfolder of the Docsy repo.
   HUGO_MOD_WITH_VERS="$DOCSY_REPO/theme"
   if [[ -n $DOCSY_VERS ]]; then
     HUGO_MOD_WITH_VERS+="@$DOCSY_VERS"

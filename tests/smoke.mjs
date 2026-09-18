@@ -1,12 +1,10 @@
 // Smoke tests: builds a Docsy-based site several ways and asserts each produces
 // a real, fully-styled site (not merely a zero exit code).
 //
-// Uses Node's built-in test runner (node:test): no extra test deps.
-//
 //   Usage: npm run test:smoke -- [options]
 //   Options:
 //     --repo <repo>    GitHub org+repo to fetch Docsy from.
-//                      Format: GITHUB_USER/DOCSY_REPO. Fallback: google/docsy
+//                      Format: GITHUB_USER/DOCSY_REPO. Fallback: docsy/docsy
 //     --branch <branch>
 //                      Docsy branch to fetch. Fallback: main
 //
@@ -132,7 +130,7 @@ function arg(name, fallback) {
 }
 
 // Default target: the GitHub upstream of the current branch, when it exists
-// and isn't main; otherwise google/docsy main.
+// and isn't main; otherwise docsy/docsy main.
 function gitUpstreamTarget() {
   const opts = { cwd: repoRoot, encoding: 'utf8' };
   const upstream = spawnSync(
@@ -153,7 +151,7 @@ function gitUpstreamTarget() {
 }
 
 const upstream = gitUpstreamTarget();
-const REPO = arg('repo', upstream?.repo ?? 'google/docsy');
+const REPO = arg('repo', upstream?.repo ?? 'docsy/docsy');
 const BRANCH = arg('branch', upstream?.branch ?? 'main');
 const TARGET = `repo "${REPO}", branch "${BRANCH}"`;
 

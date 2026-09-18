@@ -14,10 +14,10 @@ notes][releases].
 Useful links: [Releases][] & [tags][], jump to the [latest][] release, and view
 the [milestones][].
 
-[latest]: https://github.com/google/docsy/releases/latest
-[milestones]: https://github.com/google/docsy/milestones
-[releases]: https://github.com/google/docsy/releases
-[tags]: https://github.com/google/docsy/tags
+[latest]: https://github.com/docsy/docsy/releases/latest
+[milestones]: https://github.com/docsy/docsy/milestones
+[releases]: https://github.com/docsy/docsy/releases
+[tags]: https://github.com/docsy/docsy/tags
 
 ## Style guide
 
@@ -104,7 +104,7 @@ Specifically, the Docsy team **officially supports** the following:
   - Hugo module (`vX.Y.Z`)
   - GitHub [release][releases] or git tag (`vX.Y.Z`)
 
-  npm installs of Docsy from GitHub (`google/docsy`) are for development and
+  npm installs of Docsy from GitHub (`docsy/docsy`) are for development and
   testing only, not production use.
 
 - **Issue reports**: over the latest official release, a current pre-release, or
@@ -126,7 +126,7 @@ Everything else — including Windows — is supported on a best-effort basis.
 <!-- prettier-ignore-start -->
 [@docsy/theme]: https://www.npmjs.com/package/@docsy/theme
 [minimum Hugo version]: /docs/get-started/docsy-as-module/installation-prerequisites/#install-hugo
-[package.json]: https://github.com/google/docsy/blob/main/package.json
+[package.json]: https://github.com/docsy/docsy/blob/main/package.json
 <!-- prettier-ignore-end -->
 
 ### Bug fixes
@@ -150,6 +150,10 @@ history since 0.17.0][].
 
 [**Breaking changes**](#breaking-change):
 
+- **[New home][0.18.0-blog-org-move]**: moved the repositories to the `docsy`
+  GitHub organization. The Hugo module path is now
+  `github.com/docsy/docsy/theme`; the old path resolves 0.17.0 and earlier only
+  ([#1992][]).
 - **[Dropped jQuery][0.18.0-blog-jquery]**: the theme no longer loads jQuery, so
   `window.jQuery` and `$` are no longer available to site scripts; theme scripts
   now use standard DOM APIs ([#1436][]).
@@ -191,18 +195,20 @@ history since 0.17.0][].
   ([#2786][]).
 
 [#1436]: https://github.com/google/docsy/issues/1436
+[#1992]: https://github.com/docsy/docsy/issues/1992
 [#2774]: https://github.com/google/docsy/pull/2774
 [#2776]: https://github.com/google/docsy/pull/2776
 [#2779]: https://github.com/google/docsy/pull/2779
 [#2781]: https://github.com/google/docsy/pull/2781
 [#2786]: https://github.com/google/docsy/pull/2786
 [#2789]: https://github.com/google/docsy/issues/2789
-[0.18.0]: https://github.com/google/docsy/releases/latest?FIXME=v0.18.0
+[0.18.0]: https://github.com/docsy/docsy/releases/latest?FIXME=v0.18.0
 [0.18.0-blog-jquery]: /blog/2026/0.18.0/#jquery
+[0.18.0-blog-org-move]: /blog/2026/0.18.0/#org-move
 [0.18.0-blog-plugins]: /blog/2026/0.18.0/#plugins
 [ug-plugins]: /docs/content/plugins/
 [git history since 0.17.0]:
-  https://github.com/google/docsy/compare/v0.17.0...main
+  https://github.com/docsy/docsy/compare/v0.17.0...main
 
 ## v0.17.0 {#v0.17.0}
 
@@ -1192,7 +1198,7 @@ For the full list of changes, see the [0.X.Y][] release page.
 
 - ...
 
-[0.X.Y]: https://github.com/google/docsy/releases/latest?FIXME=v0.X.Y
+[0.X.Y]: https://github.com/docsy/docsy/releases/latest?FIXME=v0.X.Y
 ```
 
 ---------------------------------------------------------------------------->
