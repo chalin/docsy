@@ -86,6 +86,11 @@ defaults][ug-config-merge]), so a site's map layers over the theme's:
   - The pin never reaches the built JavaScript, which has no use for it.
   - The loop validates the pin once, for every companion that builds a fetch URL
     from it.
+- **Author fields are `_`-prefixed** (`_defer`, the schema's one so far;
+  [guide][ug-loading]): the prefix marks a schema field as the plugin's rather
+  than a site setting, as Hugo's `_merge` is a meta key, not a setting. The loop
+  doesn't track who set a field: a site that overrides one owns the outcome
+  unless the plugin's shim pins it ([implementation][impl-shims]).
 - **The schema is data**: `data/docsy/schema/params/docsy.yaml` declares the
   entry contract once, for the loop and the docs alike. Enforcement stays
   hand-coded in the loop: Hugo offers no validation for `params`, and no
@@ -100,11 +105,10 @@ defaults][ug-config-merge]), so a site's map layers over the theme's:
 
 Alternatives considered, and why not:
 
-- **A list of entries** (the initial shape, superseded before release): lists
-  are replaced, not merged, by Hugo's config merge, so theme defaults had to
-  live in template code and every override, turn-off, or duplicate needed loop
-  logic, which grew a name-keyed defaults table and plugin-specific branches
-  inside the generic loop.
+- **A list of entries**: lists are replaced, not merged, by Hugo's config merge,
+  so theme defaults would have to live in template code, and every override,
+  turn-off, or duplicate would need loop logic (a name-keyed defaults table and
+  plugin-specific branches inside the generic loop).
 - **A per-plugin manifest file** next to the script: plugin-owned defaults, but
   a third artifact per plugin, and the theme still needs a configuration home
   for which plugins are on by default. Revisit if module-shipped plugins need
@@ -172,11 +176,13 @@ idiom.
 <!-- prettier-ignore-start -->
 [#2789]: https://github.com/docsy/docsy/issues/2789
 [impl]: /project/implementation/script-loading/
+[impl-shims]: /project/implementation/script-loading/#shims
 [impl-security]: /project/implementation/script-loading/#security-constraints
 [plugins.html]: https://github.com/docsy/docsy/blob/main/theme/layouts/_partials/scripts/plugins.html
 [quality]: /project/quality/script-loading/
 [ug-config-merge]: /docs/content/configuration/#theme-defaults-and-your-overrides
 [ug-flags]: /docs/content/plugins/#page-flags-in-included-content
+[ug-loading]: /docs/content/plugins/#loading-strategy
 [ug-shims]: /docs/content/plugins/#adjust-a-plugin-per-page
 [ug-markmap-render]: /docs/content/diagrams-and-formulae/#when-a-markmap-doesnt-render
 [ug-files]: /docs/content/plugins/#plugin-files

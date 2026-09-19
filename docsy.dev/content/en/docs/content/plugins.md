@@ -1,12 +1,10 @@
 ---
 title: Plugins
-description:
-  Turn Docsy's optional scripts on or off and load your own from site
-  configuration, no layout overrides needed.
+description: Turn Docsy's optional scripts on or off from site configuration.
 ---
 
-Docsy loads some of its optional JavaScript features, and any script you add, as
-**plugins**: entries under `params.docsy.plugins` in your site configuration.
+Docsy loads some of its optional JavaScript features as **plugins**: entries
+under `params.docsy.plugins` in your site configuration.
 
 ## Configure Docsy's plugins
 
@@ -57,18 +55,14 @@ types, defaults, and syntactic patterns:
 
 - Fields are optional unless marked `required: true`.
 - `{}` for a theme plugin keeps every inherited field, including `enable`.
-- `enable` is off for `false`, `"false"`, and `0`, and on for any other value;
-  `defer` is on for `true`, `"true"`, and `1`, and off for any other value. The
-  string forms exist for [environment overrides][config-env].
-- `click-to-copy` always loads deferred: a site, language, or environment
-  `defer` value cannot make it synchronous (its
-  [shim](#adjust-a-plugin-per-page) sets the field). The plugin thus scans the
-  complete server-rendered page, [body-end hook][head and body hooks] markup
-  included, with Bootstrap already loaded. Code blocks that scripts add later
-  get no button.
-
-For guidance on using `version`, see
-[Dependency versions](#dependency-versions).
+- `enable` is off for `false`, `"false"`, and `0`, and on for any other value.
+  The string forms exist for [environment overrides][config-env].
+- `version` selects the version of a plugin's dependency, not of the plugin
+  script or of Docsy. To override a theme plugin's pin, see [MarkMap
+  version][markmap-version].
+- `_defer` is the plugin author's field (the `_` prefix marks such fields),
+  declared with the plugin ([Loading strategy](#loading-strategy)); leave it
+  alone on a plugin you didn't write.
 
 ### Warnings
 
@@ -96,6 +90,11 @@ malformed value fails the build and skips the entry before its companion runs.
 For why Docsy pins versions, see [Pinned script-dependency versions][ug-pins].
 
 ## Add a custom script
+
+{{%_param BADGE EXPERIMENTAL info %}}
+
+This section is [experimental][];
+[configuring Docsy's plugins](#configure-docsys-plugins) is supported.
 
 For a script that should load at the end of every page, register it as a plugin;
 for markup in `<head>`, inline snippets, or third-party tags, use the [head and
@@ -150,6 +149,14 @@ Companions emit before the script ([why][design-ordering]). Script and
 stylesheet tags carry [subresource integrity][SRI] in every environment. Entry
 keys reach templates lowercase ([Configuration § Key spelling][config-keys]).
 
+### Loading strategy
+
+A plugin's script runs synchronously by default. For a script that scans the
+document once when it runs, set `_defer: true`. The script then runs after
+parsing and sees markup emitted after its tag, including the [body-end
+hook][head and body hooks], as `click-to-copy` does. Declare `_defer` where you
+register the plugin, or set it in its [shim](#adjust-a-plugin-per-page).
+
 ### Adjust a plugin per page
 
 A **shim** adjusts a plugin's registry entry for each page before the plugin
@@ -176,19 +183,15 @@ relying on a flag, read
 
 ### Dependency versions
 
-The entry's `version` selects a plugin dependency version. The companion partial
-determines which dependency it refers to. The field does not automatically
-identify the version of the plugin script itself or the Docsy theme.
-
 For a custom plugin with a configurable dependency, set `version` on its
-registry entry and read `.Plugin.version` in the companion partial. Use that
-value to select the dependency's code, for example in a build-time fetch URL.
-Declaring `version` does not fetch code automatically. Omit the field if the
-plugin has no dependency version to configure.
+registry entry ([configuration reference](#configuration-reference)) and read
+`.Plugin.version` in the companion partial. Use that value to select the
+dependency's code, for example in a build-time fetch URL. Declaring `version`
+does not fetch code automatically. Omit the field if the plugin has no
+dependency version to configure.
 
-The entry's `version` is not passed to the plugin script. For a working example
-and instructions for overriding a theme-provided pin, see [MarkMap
-version][markmap-version].
+The entry's `version` is not passed to the plugin script. For a working example,
+see the `markmap` companion in [`scripts/plugins/`][theme-shims].
 
 ### Security
 
@@ -232,6 +235,7 @@ MarkMap doesn't render][].
 [config-merge]: /docs/content/configuration/#theme-defaults-and-your-overrides
 [config-warnings]: /docs/content/configuration/#configuration-warnings
 [design-ordering]: /project/design/script-loading/#ordering-decisions
+[experimental]: /project/about/changelog/#experimental
 [markmap-version]: /docs/content/diagrams-and-formulae/#markmap-version
 [impl-shim]: /project/implementation/script-loading/#shims
 [theme-shims]: https://github.com/docsy/docsy/tree/main/theme/layouts/_partials/scripts/plugins
