@@ -31,7 +31,6 @@
       "enabled": false,
     },
     {
-      // Updated deliberately via update:theme-dep.
       "matchPackageNames": ["bootstrap", "@fortawesome/fontawesome-free"],
       "enabled": false,
     },
