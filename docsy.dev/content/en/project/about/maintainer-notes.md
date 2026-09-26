@@ -150,9 +150,10 @@ is a two-step flow, run from the repo root:
    `install:safe` included, fail until the new version is approved.
 
 Automated version updates don't bump hugo-extended: the
-[Renovate config](#dependency-updates) disables them. Security updates (Renovate
-vulnerability alerts, GitHub's config-free Dependabot) can still bump it; such a
-PR fails CI until the bump is approved (step 2 above).
+[Renovate config](#dependency-updates) disables them, and Renovate's
+vulnerability alerts do not override that rule. GitHub's config-free Dependabot
+security updates can still bump it; such a PR fails CI until the bump is
+approved (step 2 above).
 
 Docs render this version live through the `hugo-version` shortcode
 (`hugo.Version`): docsy.dev builds always run the pinned Hugo.
@@ -205,12 +206,15 @@ Automated updates are configured through Renovate. Settings rationale:
 - `ignorePresets`: the preset's 3-day npm cooldown would override this repo's
   7-day `minimumReleaseAge`. Caution: this exclusion silently stops working if
   the preset is renamed upstream. The preset's age exemptions for update types
-  without release timestamps (pin, replacement) are deliberately not restored:
-  such updates never pass the age check and stay listed on the Dependency
-  Dashboard until a maintainer forces them from there. (Its exemptions for bump
-  and rollback updates change nothing: Renovate never age-checks those.)
+  without release timestamps (pin, replacement) are not restored, and they would
+  change nothing: Renovate raises `pin` and `replacement` updates outside the
+  age filter, immediately. A pin brings no new code; a replacement proposes a
+  different package, so review it as a new dependency, not a bump.
 - `lockFileMaintenance` off: wholesale lock re-resolves would churn the
   committed lockfiles; transitive security fixes arrive alert-driven instead.
+- `schedule` and `timezone`: Renovate creates its branches on Sundays, UTC. The
+  zone is set explicitly because, unset, Renovate evaluates the cron in the zone
+  of the host running it.
 - Package rules:
   - Patch and minor updates are each grouped into a single PR per wave, to cut
     review overhead; majors stay individual for one-by-one scrutiny, except
@@ -222,10 +226,13 @@ Automated updates are configured through Renovate. Settings rationale:
     Versions are looked up as GitHub Releases, whose publication date GitHub
     sets (the default tag lookup uses git dates, which whoever pushes the tag
     chooses), so an action added here must publish Releases: one that only tags
-    gets no version updates and no dashboard row. Every pin's comment names a
-    full version (`# v7.0.1`, not `# v7`), so that updates within the major
-    arrive as version bumps naming their Release, not as opaque digest bumps,
-    and a digest-only PR keeps one meaning: the pinned tag moved without a new
+    gets no version updates and no dashboard row. The rule matches actions and
+    reusable workflows only (`matchDepTypes`): runner labels such as
+    `ubuntu-latest` are `github-actions` dependencies too, but not repositories,
+    so a Releases lookup would fail on them. Every pin's comment names a full
+    version (`# v7.0.1`, not `# v7`), so that updates within the major arrive as
+    version bumps naming their Release, not as opaque digest bumps, and a
+    digest-only PR keeps one meaning: the pinned tag moved without a new
     Release. The supply-chain audit guards the shape.
   - `hugo-extended` updates are [carefully chosen](#official-hugo-version) at
     Docsy release time.
