@@ -13,7 +13,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { compile } from 'sass-embedded';
+import { compileAsync } from 'sass-embedded';
 
 const repoRoot = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
@@ -34,7 +34,7 @@ const vendors = {
 // Compile a copy of the theme tree laid out as Hugo mounts it (scss/ and
 // vendor/ as siblings). `stubs`, when given, overwrites the project stub
 // files; null keeps the repo's stock (comment-only) stubs.
-function compileTheme(stubs) {
+async function compileTheme(stubs) {
   const tmpBase = path.join(repoRoot, 'tmp');
   fs.mkdirSync(tmpBase, { recursive: true });
   const dir = fs.realpathSync(
@@ -62,7 +62,9 @@ function compileTheme(stubs) {
     }
 
     const warnings = [];
-    const result = compile(path.join(scssDir, 'main.scss'), {
+    // sass-embedded's sync API emulates blocking over a worker: slower, and it
+    // broke under Node 24.22 (sass/embedded-host-node#451).
+    const result = await compileAsync(path.join(scssDir, 'main.scss'), {
       verbose: true,
       logger: {
         warn(_message, opts) {
@@ -113,12 +115,12 @@ const fixtures = {
   },
 };
 
-test('Docsy Sass sources emit no non-import deprecation warnings', (t) => {
+test('Docsy Sass sources emit no non-import deprecation warnings', async (t) => {
   const offending = [];
   let importSeen = false;
   for (const [name, stubs] of Object.entries(fixtures)) {
     const { warnings, loadedCount, unreached, scssDir, stubUrls } =
-      compileTheme(stubs);
+      await compileTheme(stubs);
     const scssUrl = pathToFileURL(scssDir + path.sep).href;
     for (const w of warnings) {
       // Shipped-source scope: every staged theme file (main.scss and the
