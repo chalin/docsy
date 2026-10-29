@@ -1,7 +1,19 @@
 // Online npm-audit gate, complementing the offline structural checks in
-// supply-chain-audit.test.mjs: committed locks stay free of unreviewed
-// advisories. Accepted advisories stay listed below and must still be
-// reported; once one disappears, its exception is stale.
+// supply-chain-audit.test.mjs.
+//
+// What it asserts: the root package-lock.json carries no advisory beyond
+// those listed below as reviewed and accepted; an accepted advisory that
+// stops being reported is a stale exception.
+//
+// What it audits: the root lock, the one install:safe's `npm ci` reads, whole:
+// every dependency kind, online against the public registry, as committed
+// (the spawn's flags, so the caller's npm config can't narrow it). Not
+// audited: theme/package-lock.json, whose packages resolve in the root lock
+// too. Residual: workspace config (workspace, workspaces,
+// include-workspace-root) in the caller's npm config still filters the tree
+// (CI sets none).
+//
+// cSpell:ignore ghsa vulns
 
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -33,7 +45,7 @@ function validateAuditGate(report, accepted) {
   assert.equal(report.error, undefined, 'npm audit reached the registry');
   assert.ok(
     report.metadata?.dependencies?.total > 0,
-    'the audit covered the installed dependency tree',
+    'audit report covers a non-empty lock tree',
   );
 
   const reported = new Map();
@@ -73,12 +85,27 @@ function validateAuditGate(report, accepted) {
 }
 
 test('audit: reported advisories are reviewed and accepted', () => {
-  const res = spawnSync('npm', ['audit', '--json'], {
-    cwd: repoRoot,
-    encoding: 'utf8',
-    maxBuffer: 16 * 1024 * 1024,
-    shell: process.platform === 'win32',
-  });
+  const res = spawnSync(
+    'npm',
+    [
+      'audit',
+      '--json',
+      // The flags below declare what the test audits; see "What it audits" in
+      // the opening comment.
+      '--include=dev',
+      '--include=optional',
+      '--include=peer',
+      '--no-offline',
+      '--registry=https://registry.npmjs.org/',
+      '--package-lock-only',
+    ],
+    {
+      cwd: repoRoot,
+      encoding: 'utf8',
+      maxBuffer: 16 * 1024 * 1024,
+      shell: process.platform === 'win32',
+    },
+  );
   if (res.error) {
     assert.fail(`npm audit failed to run: ${res.error.message}`);
   }
