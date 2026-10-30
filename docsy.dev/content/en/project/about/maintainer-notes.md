@@ -779,9 +779,8 @@ If not adjust accordingly.
     the [publish workflow][], which publishes `@docsy/theme` from the tagged
     commit through npm [trusted publishing][] (OIDC; no npm token involved) once
     a maintainer approves the run (the `npm-publish` environment). The workflow
-    only publishes tags on `main`'s history: a patch release tagged on the
-    `release` branch needs the workflow's ancestry check deliberately widened
-    first.
+    only publishes tags on `main`'s or `release`'s history, following the
+    [branch model][].
 
     When copying this procedure into a release-run tracker, give each substep
     its own checkbox.
@@ -1178,6 +1177,7 @@ To test a Docsy branch or release from a consumer site, for each site:
 
 <!-- prettier-ignore-start -->
 [#2732]: <{{% param github_repo %}}/issues/2732>
+[branch model]: /project/build/git-repo/#branch-model
 [breaking change]: /project/about/changelog/#breaking-change
 [changelog]: /project/about/changelog/
 [contributing]: /docs/contributing/
