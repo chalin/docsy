@@ -28,6 +28,10 @@ weight: 9
 - **Code reviews**: all submissions, including those from project members, are
   reviewed as [pull requests][pr].
 
+## Report a vulnerability
+
+Report it privately, as the [security policy][] describes.
+
 ## Make a change
 
 To request a feature or report a problem, [open an issue][issues]. For a page of
@@ -56,5 +60,6 @@ Follow the [style guide][], and run the [checks][] before pushing.
 [local-docsy]: https://github.com/docsy/docsy-example/blob/main/CONTRIBUTING.md#develop-against-a-local-docsy
 [monorepo]: /project/build/git-repo/#monorepo
 [pr]: https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request
+[security policy]: https://github.com/docsy/docsy/security/policy
 [style guide]: /project/style-guide/
 <!-- prettier-ignore-end -->
