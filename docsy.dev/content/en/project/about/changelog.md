@@ -156,26 +156,19 @@ functionality, depending on scope. Prefer narrow, focused PRs where possible.
 
 </details>
 
-## v0.19.0 {#next}
+## v0.18.1 {#v0.18.1}
 
-> **UNRELEASED: this planned version is still under development**
+**Key fix** for this patch: builds failing with `page reference "docs" is
+ambiguous` on sites with pages named `docs` but no top-level `docs` section
+(since 0.18.0; since 0.15.0 with `llms.txt` enabled) ([#2875][],
+[design][project-root-page]).
 
-For the full list of changes, see the [0.19.0][] release page or the [git
-history since 0.18.0][].
-
-[**Breaking changes**](#breaking-change):
-
-- ...
-
-**New**:
-
-- ...
+For upgrade notes, see [v0.18.1][0.18.1-blog] in the 0.18.0 release report. For
+the full list of changes, see the [0.18.1][] release page or the [git history
+since 0.18.0][].
 
 **Other changes**:
 
-- Fixed builds failing with `page reference "docs" is ambiguous` on sites with
-  pages named `docs` but no top-level `docs` section (since 0.18.0; since 0.15.0
-  with `llms.txt` enabled) ([#2875][], [design][project-root-page]).
 - Fixed builds failing with `failed to read directory "static"` on Hugo 0.160.1
   through 0.163.0 for sites without `static/` (since 0.16.0) ([#2911][]).
 - Fixed a zero-padded icon size such as `favicon-08x08.png` failing the build or
@@ -207,9 +200,10 @@ history since 0.18.0][].
 [#2905]: https://github.com/docsy/docsy/pull/2905
 [#2911]: https://github.com/docsy/docsy/issues/2911
 [#2912]: https://github.com/docsy/docsy/pull/2912
-[0.19.0]: https://github.com/docsy/docsy/releases/latest?FIXME=v0.19.0
+[0.18.1]: https://github.com/docsy/docsy/releases/latest?FIXME=v0.18.1
+[0.18.1-blog]: /blog/2026/0.18.0/#v0.18.1
 [git history since 0.18.0]:
-  https://github.com/docsy/docsy/compare/v0.18.0...main
+  https://github.com/docsy/docsy/compare/v0.18.0...v0.18.1
 [patch on `release`]: /project/build/git-repo/#patch-on-release
 [project-root-page]: /project/design/root-page/
 [ug-chrome-per-page]: /docs/deployment/chrome/#setting-the-build-mode
