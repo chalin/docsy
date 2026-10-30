@@ -165,33 +165,29 @@ since 0.18.0][].
 **Other changes**:
 
 - Fixed builds failing with `page reference "docs" is ambiguous` on sites with
-  pages named `docs` but no top-level `docs` section (since 0.18.0; since 0.15.0
-  with `llms.txt` enabled) ([#2875][], [design][project-root-page]).
+  pages named `docs` but no top-level `docs` section ([#2875][],
+  [design][project-root-page]).
 - Fixed builds failing with `failed to read directory "static"` on Hugo 0.160.1
-  through 0.163.0 for sites without `static/` (since 0.16.0) ([#2911][]).
+  through 0.163.0 for sites without `static/` ([#2911][]).
 - Fixed a zero-padded icon size such as `favicon-08x08.png` failing the build or
-  being misread as octal; such files are now ignored (since 0.16.0) ([#2912][]).
+  being misread as octal; such files are now ignored ([#2911][]).
 
 [**Experimental**](#experimental):
 
 - **[`llms.txt`][ug-llms-txt]**: fixed the documentation index taking a nested
-  page named `docs` for the docs section when a site has no top-level one
-  ([#2875][]).
+  page named `docs` for the docs section ([#2875][]).
 - **[`shared` chrome][ug-chrome]**:
-  - Fixed the navbar and footer missing from every page of a doc-rooted site;
-    they render on each language's root page, the [donor page][ug-donor-page]
-    ([#2888][]).
+  - Fixed the navbar and footer missing from every page of a doc-rooted site
+    ([#2888][], [donor page][ug-donor-page]).
   - Changed the donor to keep the navbar and footer on its [HTML
-    render][root-page-consumers] only; its other renders, the home page's print
-    render included, carry placeholders.
+    render][root-page-consumers] only; other renders carry placeholders.
   - Documented the [per-page `td: { chrome: full }` setting][ug-chrome-per-page]
     and its limits.
 
 **For maintainers**:
 
-- Enabled path warnings on every docsy.dev build kind, and failing on any
-  warning in `npm run build` (local, test and scheduled builds); preview and
-  production builds keep warnings as warnings ([#2888][]).
+- Enabled Hugo path warnings on every docsy.dev build kind; `npm run build` now
+  fails on any warning, preview and production builds don't ([#2888][]).
 - Extended the publish workflow's release-tag check to `release`'s history, so a
   [patch on `release`][] can publish to npm ([#2905][]).
 
