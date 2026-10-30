@@ -397,6 +397,11 @@ test('locks and manifests: security overrides are applied and still needed', () 
       `${o.parent} declares the ${name} range that justifies the override`,
     );
   }
+  assert.match(
+    rootManifest.overridesComment ?? '',
+    /REVIEWED_OVERRIDES/,
+    'overridesComment names REVIEWED_OVERRIDES',
+  );
 });
 
 // Byte-exact reviewed forms of the scripts that hold install or
