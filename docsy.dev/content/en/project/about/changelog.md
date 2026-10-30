@@ -158,10 +158,10 @@ functionality, depending on scope. Prefer narrow, focused PRs where possible.
 
 ## v0.18.1 {#v0.18.1}
 
-**Key fix** for this patch: builds failing with `page reference "docs" is
-ambiguous` on sites with pages named `docs` but no top-level `docs` section
-(since 0.18.0; since 0.15.0 with `llms.txt` enabled) ([#2875][],
-[design][project-root-page]).
+**Key fix** for this patch: builds failing with
+`page reference "docs" is ambiguous` on sites with pages named `docs` but no
+top-level `docs` section (since 0.18.0; since 0.15.0 with `llms.txt` enabled)
+([#2875][], [design][project-root-page]).
 
 For upgrade notes, see [v0.18.1][0.18.1-blog] in the 0.18.0 release report. For
 the full list of changes, see the [0.18.1][] release page or the [git history
