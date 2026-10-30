@@ -27,9 +27,9 @@ const BASE = 'https://example.org';
 
 // Run the client over a shared-mode page, resolving every donor (chrome and sidebar)
 // from the shared build's own output.
-async function inlinePage(ccr, page, url) {
+async function inlinePage(ccr, page, url, html = ccr.publicFile(page)) {
   return normalize(
-    await inlineChrome(ccr.publicFile(page), {
+    await inlineChrome(html, {
       url,
       resolveDonor: (pathname) => {
         const rel = pathname.replace(/^\/+/, '').replace(/\/$/, '');
@@ -139,6 +139,30 @@ languages:
   const got = selectorLinks(await inlinePage(ccr, page, url), LANG_MENU);
   assert.ok(got.length > 0, 'restored language menu carries links');
   assert.deepEqual(got, want, 'restored language links match the full build');
+
+  // A `//` right after the language prefix, bare or behind the site's own
+  // host, with the hint absent (a navbar override); the guard is
+  // sameOriginPath on the composed link.
+  const jaPage = 'ja/docs/page-a/index.html';
+  const hint = / data-canonical-path="[^"]*"/;
+  const jaHtml = ccr.publicFile(jaPage);
+  assert.match(jaHtml, hint, 'sanity: page carries the hint the probe strips');
+  const stripped = jaHtml.replace(hint, '');
+  for (const path of [
+    '/ja//evil.example/docs/page-a/',
+    '/ja//example.org//example.org//evil.example/docs/page-a/',
+  ]) {
+    const hostile = selectorLinks(
+      await inlinePage(ccr, jaPage, BASE + path, stripped),
+      LANG_MENU,
+    );
+    assert.ok(hostile.length > 0, `language menu carries links at ${path}`);
+    assert.deepEqual(
+      hostile,
+      ['/'],
+      `language links keep the donor's root at ${path}`,
+    );
+  }
 });
 
 test('shared mode language selector links a missing translation, diverging from a full build (known CCR-10 gap)', async () => {

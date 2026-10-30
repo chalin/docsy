@@ -66,9 +66,9 @@ const ccr = buildSite('canon-ccr', {
   env: { HUGO_PARAMS_TD_CHROME: 'shared' },
 });
 
-async function inlineAt(page, url) {
+async function inlineAt(html, url) {
   return normalize(
-    await inlineChrome(ccr.publicFile(page), {
+    await inlineChrome(html, {
       url,
       resolveDonor: (pathname) => {
         const rel = pathname.replace(/^\/+/, '').replace(/\/$/, '');
@@ -102,7 +102,7 @@ test('shared mode keys active state to the canonical path, not the request URL',
   const canonicalUrl = `${BASE}/docs/guide/intro/`;
 
   const opts = { canonical: true };
-  const inlined = await inlineAt(page, requestUrl);
+  const inlined = await inlineAt(ccr.publicFile(page), requestUrl);
   const reference = normalize(full.publicFile(page));
 
   // The restored navbar (active link + per-page version selector) matches the
@@ -122,5 +122,82 @@ test('shared mode keys active state to the canonical path, not the request URL',
   assert.ok(
     canonicalUrl.endsWith('/docs/guide/intro/'),
     'sanity: canonical differs from the request URL',
+  );
+});
+
+// Hints that aren't same-origin paths (another scheme, an origin-inheriting
+// one, a foreign host however spelled, with or without the site's own host in
+// front); the guard is sameOriginPath in chrome-nav.js.
+test('shared mode ignores a canonical-path hint that is not a same-origin path', async () => {
+  assert.equal(full.status, 0, `full build succeeds:\n${full.stderr}`);
+  assert.equal(ccr.status, 0, `CCR build succeeds:\n${ccr.stderr}`);
+
+  const page = 'docs/guide/intro/index.html';
+  const html = ccr.publicFile(page);
+  const hint = /data-canonical-path="\/docs\/guide\/intro\/"/;
+  assert.match(html, hint, 'sanity: page carries the hint the probe replaces');
+
+  const opts = { canonical: true };
+  const reference = normalize(full.publicFile(page));
+  // Every value carries another page's path, so a hint that got used would
+  // show in the restored chrome.
+  const hostile = [
+    'javascript:alert(1)//',
+    `blob:${BASE}/docs/guide/setup/`,
+    'https://evil.example/docs/guide/setup/',
+    '//evil.example/docs/guide/setup/',
+    '/.//evil.example/docs/guide/setup/',
+    '//example.org//example.org//evil.example/docs/guide/setup/',
+  ];
+  for (const value of hostile) {
+    const tampered = html.replace(hint, `data-canonical-path="${value}"`);
+    const inlined = await inlineAt(tampered, `${BASE}/docs/guide/intro/`);
+    assert.equal(
+      regionOf(inlined, '.td-navbar', opts),
+      regionOf(reference, '.td-navbar', opts),
+      `restored navbar matches the full page, hint ${value} ignored`,
+    );
+    assert.equal(
+      navRegion(inlined, opts),
+      navRegion(reference, opts),
+      `restored left-nav matches the full page, hint ${value} ignored`,
+    );
+  }
+});
+
+// A navbar override can drop the hint; the guard is sameOriginPath.
+test('shared mode validates the request-path fallback when the hint is absent', async () => {
+  assert.equal(full.status, 0, `full build succeeds:\n${full.stderr}`);
+  assert.equal(ccr.status, 0, `CCR build succeeds:\n${ccr.stderr}`);
+
+  const page = 'docs/guide/intro/index.html';
+  const html = ccr.publicFile(page);
+  const hint = / data-canonical-path="[^"]*"/;
+  assert.match(html, hint, 'sanity: page carries the hint the probe strips');
+  const stripped = html.replace(hint, '');
+
+  const opts = { canonical: true };
+  const reference = normalize(full.publicFile(page));
+
+  const atCanonical = await inlineAt(stripped, `${BASE}/docs/guide/intro/`);
+  assert.equal(
+    regionOf(atCanonical, '.td-navbar', opts),
+    regionOf(reference, '.td-navbar', opts),
+    'restored navbar matches the full page from the request path',
+  );
+  assert.equal(
+    navRegion(atCanonical, opts),
+    navRegion(reference, opts),
+    'restored left-nav matches the full page from the request path',
+  );
+
+  const atHostile = await inlineAt(
+    stripped,
+    `${BASE}//evil.example/docs/guide/intro/`,
+  );
+  assert.equal(
+    regionOf(atHostile, '.td-navbar', opts),
+    regionOf(normalize(full.publicFile('index.html')), '.td-navbar', opts),
+    'hostile request path restores the root page navbar',
   );
 });

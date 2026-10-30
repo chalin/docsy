@@ -20,21 +20,43 @@
 
   const normalizePath = (path) => (path.endsWith('/') ? path : path + '/');
 
+  // The same-origin page path that `urlOrPath` denotes, with a trailing slash,
+  // or null.
+  function sameOriginPath(urlOrPath) {
+    if (!urlOrPath) return null;
+    const origin = window.location.origin;
+    let path;
+    try {
+      const url = new URL(urlOrPath, window.location.href);
+      if (url.origin !== origin) return null;
+      // The path is written as a relative href, so it must read back as itself:
+      // `/.//host/…` re-parses to another host; `//site//site//host/…` and
+      // `blob:` (whose path is its inner URL) re-parse to a different path.
+      path = url.pathname;
+      const again = new URL(path, window.location.href);
+      if (again.origin !== origin || again.pathname !== path) return null;
+    } catch (e) {
+      return null;
+    }
+    return normalizePath(path);
+  }
+
   // The page's HTML URL, the one its nav links use, keys all active-state
-  // restores. It defaults to window.location, but on print (/_print/…) and
-  // paginator (…/page/N/) pages the request URL isn't that URL; the server bakes
-  // it as data-canonical-path on the navbar placeholder (see navbar.html), read
-  // once in init() before the placeholders are swapped out.
+  // restores, and the selector-link restores rebuild hrefs from it. Every
+  // navbar placeholder carries it as data-canonical-path (see navbar.html),
+  // since on print (/_print/…) and paginator (…/page/N/) pages the request URL
+  // isn't that URL; init() reads it once, before the placeholders are swapped
+  // out. Pages without a valid hint (no placeholder, as on full-mode pages with
+  // the cached sidebar; an override that drops it) key on window.location.
   let canonicalPath = null;
 
   function currentPath() {
-    return canonicalPath || normalizePath(window.location.pathname);
+    return canonicalPath || sameOriginPath(window.location.pathname) || '/';
   }
 
   function readCanonicalPath() {
     const el = document.querySelector('[data-canonical-path]');
-    const raw = el && el.getAttribute('data-canonical-path');
-    return raw ? normalizePath(raw) : null;
+    return sameOriginPath(el && el.getAttribute('data-canonical-path'));
   }
 
   // Apply the active-page classes to a freshly injected or shared nav. The
@@ -315,7 +337,9 @@
       '.td-lang-menu .dropdown-menu a[href]',
     )) {
       const langHome = normalizePath(new URL(link.href).pathname);
-      link.setAttribute('href', langHome + rel);
+      // A `//` right after the prefix would read as a host.
+      const target = sameOriginPath(langHome + rel);
+      if (target) link.setAttribute('href', target);
     }
   }
 
