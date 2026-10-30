@@ -1403,6 +1403,7 @@
   // Live at the v0.18.1 release.
   "https://github.com/docsy/docsy/compare/v0.18.0...v0.18.1": {
     "result": 206,
+    "when": "2026-10-30T22:34:31Z",
     "via": "manual",
     "expires": "2026-11-06",
   },
