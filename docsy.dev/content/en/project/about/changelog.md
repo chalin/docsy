@@ -158,17 +158,15 @@ functionality, depending on scope. Prefer narrow, focused PRs where possible.
 
 ## v0.18.1 {#v0.18.1}
 
-**Key fix** for this patch: builds failing with
-`page reference "docs" is ambiguous` on sites with pages named `docs` but no
-top-level `docs` section (since 0.18.0; since 0.15.0 with `llms.txt` enabled)
-([#2875][], [design][project-root-page]).
-
 For upgrade notes, see [v0.18.1][0.18.1-blog] in the 0.18.0 release report. For
 the full list of changes, see the [0.18.1][] release page or the [git history
 since 0.18.0][].
 
 **Other changes**:
 
+- Fixed builds failing with `page reference "docs" is ambiguous` on sites with
+  pages named `docs` but no top-level `docs` section (since 0.18.0; since 0.15.0
+  with `llms.txt` enabled) ([#2875][], [design][project-root-page]).
 - Fixed builds failing with `failed to read directory "static"` on Hugo 0.160.1
   through 0.163.0 for sites without `static/` (since 0.16.0) ([#2911][]).
 - Fixed a zero-padded icon size such as `favicon-08x08.png` failing the build or
@@ -176,23 +174,25 @@ since 0.18.0][].
 
 [**Experimental**](#experimental):
 
-- **`llms.txt`**: fixed the documentation index taking a nested page named
-  `docs` for the docs section when a site has no top-level one ([#2875][]).
-- **`shared` chrome**:
+- **[`llms.txt`][ug-llms-txt]**: fixed the documentation index taking a nested
+  page named `docs` for the docs section when a site has no top-level one
+  ([#2875][]).
+- **[`shared` chrome][ug-chrome]**:
   - Fixed the navbar and footer missing from every page of a doc-rooted site;
     they render on each language's root page, the [donor page][ug-donor-page]
     ([#2888][]).
-  - Changed the donor to keep the navbar and footer on its HTML render only; its
-    other renders, the home page's print render included, carry placeholders.
+  - Changed the donor to keep the navbar and footer on its [HTML
+    render][root-page-consumers] only; its other renders, the home page's print
+    render included, carry placeholders.
   - Documented the [per-page `td: { chrome: full }` setting][ug-chrome-per-page]
     and its limits.
 
 **For maintainers**:
 
-- Made docsy.dev builds report duplicate target paths on every build kind, and
-  `npm run build` (local, test and scheduled builds) fail on any warning;
-  preview and production builds keep warnings as warnings ([#2888][]).
-- Made the publish workflow accept release tags on `release`'s history, so a
+- Enabled path warnings on every docsy.dev build kind, and failing on any
+  warning in `npm run build` (local, test and scheduled builds); preview and
+  production builds keep warnings as warnings ([#2888][]).
+- Extended the publish workflow's release-tag check to `release`'s history, so a
   [patch on `release`][] can publish to npm ([#2905][]).
 
 [#2875]: https://github.com/docsy/docsy/issues/2875
@@ -206,8 +206,11 @@ since 0.18.0][].
   https://github.com/docsy/docsy/compare/v0.18.0...v0.18.1
 [patch on `release`]: /project/build/git-repo/#patch-on-release
 [project-root-page]: /project/design/root-page/
+[root-page-consumers]: /project/design/root-page/#consumers
+[ug-chrome]: /docs/deployment/chrome/
 [ug-chrome-per-page]: /docs/deployment/chrome/#setting-the-build-mode
 [ug-donor-page]: /docs/deployment/chrome/#donor-pages
+[ug-llms-txt]: /docs/content/agent-support/#llms-txt
 
 ## v0.18.0 {#v0.18.0}
 
