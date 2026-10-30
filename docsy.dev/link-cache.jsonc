@@ -1400,7 +1400,7 @@
     "when": "2026-10-08T10:07:12Z",
     "via": "lychee",
   },
-  // 0.18.1 release-prep seed: goes live with the release tag.
+  // Live at the v0.18.1 release.
   "https://github.com/docsy/docsy/compare/v0.18.0...v0.18.1": {
     "result": 206,
     "via": "manual",
