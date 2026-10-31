@@ -201,7 +201,7 @@ since 0.18.0][].
 [#2911]: https://github.com/docsy/docsy/issues/2911
 [#2912]: https://github.com/docsy/docsy/pull/2912
 [0.18.1]: https://github.com/docsy/docsy/releases/latest?FIXME=v0.18.1
-[0.18.1-blog]: /blog/2026/0.18.0/#v0.18.1
+[0.18.1-blog]: /blog/2026/0.18.1/#v0.18.1
 [git history since 0.18.0]:
   https://github.com/docsy/docsy/compare/v0.18.0...v0.18.1
 [patch on `release`]: /project/build/git-repo/#patch-on-release
@@ -318,11 +318,11 @@ full list of changes, see the [0.18.0][] release page or the [git history since
 [#2852]: https://github.com/docsy/docsy/pull/2852
 [#2857]: https://github.com/docsy/docsy/pull/2857
 [0.18.0]: https://github.com/docsy/docsy/releases/tag/v0.18.0
-[0.18.0 release report]: /blog/2026/0.18.0/
-[0.18.0-blog-jquery]: /blog/2026/0.18.0/#jquery
-[0.18.0-blog-llms-txt]: /blog/2026/0.18.0/#llms-txt-actions
-[0.18.0-blog-org-move]: /blog/2026/0.18.0/#org-move
-[0.18.0-blog-plugins]: /blog/2026/0.18.0/#plugins
+[0.18.0 release report]: /blog/2026/0.18.1/
+[0.18.0-blog-jquery]: /blog/2026/0.18.1/#jquery
+[0.18.0-blog-llms-txt]: /blog/2026/0.18.1/#llms-txt-actions
+[0.18.0-blog-org-move]: /blog/2026/0.18.1/#org-move
+[0.18.0-blog-plugins]: /blog/2026/0.18.1/#plugins
 [hugo-0.166.0]: https://github.com/gohugoio/hugo/releases/tag/v0.166.0
 [Hugo 0.165+ upgrade guide]: /blog/2026/hugo-0.165.0+/
 [link-cache]: https://github.com/chalin/link-cache

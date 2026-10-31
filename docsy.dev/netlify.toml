@@ -36,4 +36,11 @@ TD_BUILD_CTX = "doc-rooted"
   to = "/docs/content/:splat"
   status = 301
 
+# The 0.18.0 release post became the 0.18.1 one (patch update); a 301 keeps
+# inbound fragments, which Hugo's alias page drops.
+[[redirects]]
+  from = "/blog/2026/0.18.0/*"
+  to = "/blog/2026/0.18.1/:splat"
+  status = 301
+
 # cSpell:ignore docsy

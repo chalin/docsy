@@ -19,13 +19,13 @@ params:
   katexMinVersion: 0.18.4
 ---
 
-This post is a companion to the [Docsy 0.18.0 release post](0.18.0/), whose
-[upgrade section](0.18.0/#upgrade) names the Hugo version that 0.18.0 supports.
+This post is a companion to the [Docsy 0.18.0 release post](0.18.1/), whose
+[upgrade section](0.18.1/#upgrade) names the Hugo version that 0.18.0 supports.
 
 ## Upgrade summary
 
 - **This guide is for you if** you're:
-  - [Upgrading to Docsy 0.18.0](0.18.0/#upgrade) from Hugo 0.164.x or older
+  - [Upgrading to Docsy 0.18.0](0.18.1/#upgrade) from Hugo 0.164.x or older
   - Upgrading only Hugo, past 0.164.x
 - Review {{% _param BADGE BREAKING warning %}} changes:
   <a id="breaking-changes"></a>
@@ -132,7 +132,7 @@ Then:
 Hugo 0.166.0's bundled KaTeX, the one behind `transform.ToMath` and Docsy's
 `math` fences, emits markup that needs a KaTeX {{% param katexMinVersion %}} or
 later stylesheet; an older one misrenders some expressions. Docsy 0.18.0's
-[pin](0.18.0/#upgrade), KaTeX {{% param katexVersion %}}, satisfies it.
+[pin](0.18.1/#upgrade), KaTeX {{% param katexVersion %}}, satisfies it.
 
 ### Actions {#katex-actions}
 
@@ -141,7 +141,7 @@ stylesheet below {{% param katexMinVersion %}}, through `params.katex.version`
 or an overridden `scripts/katex.html`.
 
 - Remove your pin to take Docsy's default, or update an overridden partial's
-  stylesheet to the [supported version](0.18.0/#upgrade); for a custom pin, see
+  stylesheet to the [supported version](0.18.1/#upgrade); for a custom pin, see
   [KaTeX version][katex-docs].
 
 ## Imaging config deprecations now warn (0.166.0) {#imaging}
@@ -219,8 +219,8 @@ Hugo][update-hugo] to
 
 Confirm that you've addressed [every action][] that applies to your site. Then:
 
-- Upgrading as part of [Docsy 0.18.0](0.18.0/)? Continue with its
-  [upgrade section](0.18.0/#upgrade).
+- Upgrading as part of [Docsy 0.18.0](0.18.1/)? Continue with its
+  [upgrade section](0.18.1/#upgrade).
 - Otherwise, finish with the [generic site checks][check].
 
 <!-- prettier-ignore-start -->

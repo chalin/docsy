@@ -64,6 +64,6 @@ After updating the theme, continue with the remaining update steps, starting
 with [Review your theme overrides](/docs/update/#update-overrides).
 
 <!-- prettier-ignore-start -->
-[0.18.0 release report]: /blog/2026/0.18.0/#org-move-actions
+[0.18.0 release report]: /blog/2026/0.18.1/#org-move-actions
 [theme npm dependencies]: /docs/get-started/docsy-as-module/start-from-scratch/#install-theme-npm-dependencies
 <!-- prettier-ignore-end -->
