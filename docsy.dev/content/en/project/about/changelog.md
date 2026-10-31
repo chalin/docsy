@@ -640,7 +640,7 @@ For the full list of changes, see the [release report][0.14.2-blog] and
 [#2548]: https://github.com/docsy/docsy/pull/2548
 [#2549]: https://github.com/docsy/docsy/pull/2549
 [0.14.2]: https://github.com/docsy/docsy/releases/v0.14.2
-[0.14.2-blog]: /blog/2026/0.14.0/#v0.14.2
+[0.14.2-blog]: /blog/2026/0.14.0/#0.14.2
 
 ## v0.14.1 {#v0.14.1}
 
