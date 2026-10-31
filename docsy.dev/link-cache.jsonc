@@ -2051,9 +2051,19 @@
     "when": "2026-09-17T23:13:29Z",
     "via": "lychee",
   },
+  "https://github.com/docsy/docsy/issues/new?title=Docsy%200.10%20release%20report": {
+    "result": 200,
+    "when": "2026-10-31T14:42:44Z",
+    "via": "lychee",
+  },
   "https://github.com/docsy/docsy/issues/new?title=Docsy%200.10.0%20release%20report": {
     "result": 200,
     "when": "2026-09-17T23:14:32Z",
+    "via": "lychee",
+  },
+  "https://github.com/docsy/docsy/issues/new?title=Docsy%200.9%20release%20report": {
+    "result": 200,
+    "when": "2026-10-31T14:42:44Z",
     "via": "lychee",
   },
   "https://github.com/docsy/docsy/issues/new?title=Docsy%200.9.0%20release%20report": {
@@ -2201,9 +2211,19 @@
     "when": "2026-09-17T23:15:33Z",
     "via": "lychee",
   },
+  "https://github.com/docsy/docsy/issues/new?title=Release%200.13%20report%20and%20upgrade%20guide": {
+    "result": 200,
+    "when": "2026-10-31T14:42:44Z",
+    "via": "lychee",
+  },
   "https://github.com/docsy/docsy/issues/new?title=Release%200.13.0%20report%20and%20upgrade%20guide": {
     "result": 200,
     "when": "2026-09-17T23:15:34Z",
+    "via": "lychee",
+  },
+  "https://github.com/docsy/docsy/issues/new?title=Release%200.14%20report%20and%20upgrade%20guide": {
+    "result": 200,
+    "when": "2026-10-31T14:42:44Z",
     "via": "lychee",
   },
   "https://github.com/docsy/docsy/issues/new?title=Release%200.14.0%20report%20and%20upgrade%20guide": {
@@ -2211,9 +2231,19 @@
     "when": "2026-09-17T23:15:34Z",
     "via": "lychee",
   },
+  "https://github.com/docsy/docsy/issues/new?title=Release%200.15%20report%20and%20upgrade%20guide": {
+    "result": 200,
+    "when": "2026-10-31T14:42:44Z",
+    "via": "lychee",
+  },
   "https://github.com/docsy/docsy/issues/new?title=Release%200.15.0%20report%20and%20upgrade%20guide": {
     "result": 200,
     "when": "2026-09-17T23:15:34Z",
+    "via": "lychee",
+  },
+  "https://github.com/docsy/docsy/issues/new?title=Release%200.16%20report%20and%20upgrade%20guide": {
+    "result": 200,
+    "when": "2026-10-31T14:42:44Z",
     "via": "lychee",
   },
   "https://github.com/docsy/docsy/issues/new?title=Release%200.16.0%20report%20and%20upgrade%20guide": {
@@ -2221,14 +2251,29 @@
     "when": "2026-09-17T23:15:34Z",
     "via": "lychee",
   },
+  "https://github.com/docsy/docsy/issues/new?title=Release%200.17%20report%20and%20upgrade%20guide": {
+    "result": 200,
+    "when": "2026-10-31T14:42:44Z",
+    "via": "lychee",
+  },
   "https://github.com/docsy/docsy/issues/new?title=Release%200.17.0%20report%20and%20upgrade%20guide": {
     "result": 200,
     "when": "2026-09-17T23:14:32Z",
     "via": "lychee",
   },
+  "https://github.com/docsy/docsy/issues/new?title=Release%200.18%20report%20and%20upgrade%20guide": {
+    "result": 200,
+    "when": "2026-10-31T14:42:44Z",
+    "via": "lychee",
+  },
   "https://github.com/docsy/docsy/issues/new?title=Release%200.18.0%20report%20and%20upgrade%20guide": {
     "result": 200,
     "when": "2026-09-17T23:15:34Z",
+    "via": "lychee",
+  },
+  "https://github.com/docsy/docsy/issues/new?title=Release%200.19%20report%20and%20upgrade%20guide": {
+    "result": 200,
+    "when": "2026-10-31T14:42:44Z",
     "via": "lychee",
   },
   "https://github.com/docsy/docsy/issues/new?title=Release%200.19.0%20report%20and%20upgrade%20guide": {
@@ -2314,6 +2359,11 @@
   "https://github.com/docsy/docsy/issues/new?title=Update%20your%20Docsy%20NPM%20package": {
     "result": 200,
     "when": "2026-09-17T23:13:27Z",
+    "via": "lychee",
+  },
+  "https://github.com/docsy/docsy/issues/new?title=Upgrade%20to%20Docsy%200.12%20from%200.11": {
+    "result": 200,
+    "when": "2026-10-31T14:42:43Z",
     "via": "lychee",
   },
   "https://github.com/docsy/docsy/issues/new?title=Upgrade%20to%20Docsy%200.12.0%20from%200.11.0": {
