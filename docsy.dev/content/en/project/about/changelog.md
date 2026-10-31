@@ -158,59 +158,62 @@ functionality, depending on scope. Prefer narrow, focused PRs where possible.
 
 ## v0.18.1 {#v0.18.1}
 
-For upgrade notes, see [v0.18.1][0.18.1-blog] in the 0.18.0 release report. For
-the full list of changes, see the [0.18.1][] release page or the [git history
-since 0.18.0][].
+For upgrade notes and supported-version moves, see [v0.18.1][0.18.1-blog] in the
+0.18.0 release report. For the full list of changes, see the [0.18.1][] release
+page or the [git history since 0.18.0][].
 
 **Other changes**:
 
 - Fixed builds failing with `page reference "docs" is ambiguous` on sites with
-  pages named `docs` but no top-level `docs` section ([#2875][],
-  [design][project-root-page]).
-- Fixed tabpane IDs colliding on combined pages, such as print pages, and for a
-  tabpane nested in another shortcode; generated `tabs-NN-NN` anchors change,
-  and panes now carry `aria-labelledby` ([#2868][]).
+  pages named `docs` but no top-level `docs` section ([#2875][]).
+- Fixed tabpanes switching each other's panes on combined pages, such as print
+  pages, or when one is nested in another shortcode; generated `tabs-…` IDs
+  changed ([#2868][]).
+- Fixed tabpane accessibility: panes' `aria-labelledby` was misspelled, and a
+  positive `tabindex` put panes first in keyboard focus order ([#2910][]).
 - Fixed builds failing with `failed to read directory "static"` on Hugo 0.160.1
   through 0.163.0 for sites without `static/` ([#2911][]).
-- Fixed a zero-padded icon size such as `favicon-08x08.png` failing the build or
-  being misread as octal; such files are now ignored ([#2911][]).
+- Fixed zero-padded favicon names, such as `favicon-08x08.png`, failing the
+  build or reading as octal; such files are now left unlinked ([#2912][]).
 
 [**Experimental**](#experimental):
 
 - **[`llms.txt`][ug-llms-txt]**: fixed the documentation index taking a nested
   page named `docs` for the docs section ([#2875][]).
-- **[`shared` chrome][ug-chrome]**:
-  - Fixed the navbar and footer missing from every page of a doc-rooted site
-    ([#2888][], [donor page][ug-donor-page]).
-  - Changed the donor to keep the navbar and footer on its [HTML
-    render][root-page-consumers] only; other renders carry placeholders.
-  - Documented the [per-page `td: { chrome: full }` setting][ug-chrome-per-page]
+- **[`shared` chrome][ug-chrome]** ([#2888][]):
+  - Fixed the navbar and footer missing from every page of a doc-rooted site.
+  - Changed the [donor page][ug-donor-page] to keep the navbar and footer on its
+    [HTML render][project-root-page-cases] only; its print render now carries
+    placeholders like any other page.
+  - Documented the per-page [`td: { chrome: full }`][ug-chrome-per-page] opt-out
     and its limits.
 
 **For maintainers**:
 
-- Enabled Hugo path warnings on every docsy.dev build kind; `npm run build` now
-  fails on any warning while preview and production builds still only warn
-  ([#2888][]).
+- Enabled Hugo's duplicate-path warnings on every docsy.dev build kind;
+  `npm run build` now fails on any warning, while preview and production builds
+  still only warn ([#2888][]).
 - Extended the publish workflow's release-tag check to `release`'s history, so a
   [patch on `release`][] can publish to npm ([#2905][]).
 
+<!-- prettier-ignore-start -->
 [#2868]: https://github.com/docsy/docsy/issues/2868
 [#2875]: https://github.com/docsy/docsy/issues/2875
 [#2888]: https://github.com/docsy/docsy/pull/2888
 [#2905]: https://github.com/docsy/docsy/pull/2905
+[#2910]: https://github.com/docsy/docsy/pull/2910
 [#2911]: https://github.com/docsy/docsy/issues/2911
+[#2912]: https://github.com/docsy/docsy/pull/2912
 [0.18.1]: https://github.com/docsy/docsy/releases/latest?FIXME=v0.18.1
 [0.18.1-blog]: /blog/2026/0.18.1/#v0.18.1
-[git history since 0.18.0]:
-  https://github.com/docsy/docsy/compare/v0.18.0...v0.18.1
+[git history since 0.18.0]: https://github.com/docsy/docsy/compare/v0.18.0...v0.18.1
 [patch on `release`]: /project/build/git-repo/#patch-on-release
-[project-root-page]: /project/design/root-page/
-[root-page-consumers]: /project/design/root-page/#consumers
+[project-root-page-cases]: /project/design/root-page/#covered-cases
 [ug-chrome]: /docs/deployment/chrome/
 [ug-chrome-per-page]: /docs/deployment/chrome/#setting-the-build-mode
 [ug-donor-page]: /docs/deployment/chrome/#donor-pages
 [ug-llms-txt]: /docs/content/agent-support/#llms-txt
+<!-- prettier-ignore-end -->
 
 ## v0.18.0 {#v0.18.0}
 
