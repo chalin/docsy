@@ -1400,12 +1400,11 @@
     "when": "2026-10-08T10:07:12Z",
     "via": "lychee",
   },
-  // Live at the v0.18.1 release.
   "https://github.com/docsy/docsy/compare/v0.18.0...v0.18.1": {
     "result": 206,
     "when": "2026-10-30T22:34:31Z",
     "via": "manual",
-    "expires": "2026-11-06",
+    "expires": "2026-10-31",
   },
   "https://github.com/docsy/docsy/compare/v0.8.0...v0.9.0": {
     "result": 200,
@@ -3051,6 +3050,12 @@
     "result": 200,
     "when": "2026-10-08T10:42:02Z",
     "via": "lychee",
+  },
+  "https://github.com/docsy/docsy/releases/tag/v0.18.1": {
+    "result": 206,
+    "when": "2026-10-31T02:09:54Z",
+    "via": "manual",
+    "expires": "2026-10-31",
   },
   // Live at the v0.19.0 release.
   "https://github.com/docsy/docsy/releases/tag/v0.19.0": {
@@ -5619,12 +5624,11 @@
     "when": "2026-10-17T12:49:44Z",
     "via": "lychee",
   },
-  // Live at the v0.18.1 release.
   "https://www.docsy.dev/project/build/git-repo/#local-build": {
     "result": 206,
     "when": "2026-10-17T16:34:45Z",
     "via": "manual",
-    "expires": "2026-11-06",
+    "expires": "2026-10-31",
   },
   "https://www.docsy.dev/project/build/git-repo/#monorepo": {
     "result": 200,
@@ -5636,12 +5640,11 @@
     "when": "2026-10-12T04:45:52Z",
     "via": "lychee",
   },
-  // Live at the v0.18.1 release.
   "https://www.docsy.dev/project/design/root-page/": {
     "result": 206,
     "when": "2026-10-18T01:00:58Z",
     "via": "manual",
-    "expires": "2026-11-06",
+    "expires": "2026-10-31",
   },
   "https://www.docsy.dev/project/design/script-loading/": {
     "result": 200,

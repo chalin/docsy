@@ -189,7 +189,8 @@ since 0.18.0][].
 **For maintainers**:
 
 - Enabled Hugo path warnings on every docsy.dev build kind; `npm run build` now
-  fails on any warning, preview and production builds don't ([#2888][]).
+  fails on any warning while preview and production builds still only warn
+  ([#2888][]).
 - Extended the publish workflow's release-tag check to `release`'s history, so a
   [patch on `release`][] can publish to npm ([#2905][]).
 
