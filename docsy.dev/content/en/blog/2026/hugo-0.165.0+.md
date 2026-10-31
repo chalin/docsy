@@ -18,7 +18,7 @@ params:
 ---
 
 This post is a companion to the [Docsy 0.18 release post][0.18], whose [upgrade
-section][0.18-upgrade] names the Hugo version that it supports.
+section][0.18-upgrade] names the supported Hugo version.
 
 ## Upgrade summary
 
@@ -129,7 +129,7 @@ Then:
 Hugo 0.166.0's bundled KaTeX, the one behind `transform.ToMath` and Docsy's
 `math` fences, emits markup that needs a KaTeX {{% param katexMinVers %}} or
 later stylesheet; an older one misrenders some expressions. Docsy's default pin
-has satisfied it since 0.17.0; for the current value, see the [supported
+has satisfied it since 0.17.0; for the 0.18 pin, see the [supported
 versions][0.18-upgrade].
 
 ### Actions {#katex-actions}
