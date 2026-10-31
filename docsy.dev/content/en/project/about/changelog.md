@@ -167,6 +167,9 @@ since 0.18.0][].
 - Fixed builds failing with `page reference "docs" is ambiguous` on sites with
   pages named `docs` but no top-level `docs` section ([#2875][],
   [design][project-root-page]).
+- Fixed tabpane IDs colliding across the tabpanes of a combined page, such as a
+  print page; the IDs are now keyed on the page and the enclosing shortcodes, so
+  generated `tabs-NN-NN` anchors change ([#2868][]).
 - Fixed builds failing with `failed to read directory "static"` on Hugo 0.160.1
   through 0.163.0 for sites without `static/` ([#2911][]).
 - Fixed a zero-padded icon size such as `favicon-08x08.png` failing the build or
@@ -191,6 +194,7 @@ since 0.18.0][].
 - Extended the publish workflow's release-tag check to `release`'s history, so a
   [patch on `release`][] can publish to npm ([#2905][]).
 
+[#2868]: https://github.com/docsy/docsy/issues/2868
 [#2875]: https://github.com/docsy/docsy/issues/2875
 [#2888]: https://github.com/docsy/docsy/pull/2888
 [#2905]: https://github.com/docsy/docsy/pull/2905
