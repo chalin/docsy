@@ -115,8 +115,7 @@ const blogPosts = () =>
 const frontMatterOf = (text) => text.match(/^---\n([\s\S]*?)\n---/)?.[1] ?? '';
 
 // Hugo resolves a page param only when it is a top-level front-matter field or
-// a direct child of `params:`; a deeper-nested param is silently ignored and
-// the live site value is rendered instead.
+// a direct child of `params:`; deeper nesting leaves it undeclared.
 const pageParamOf = (frontMatter, param) => {
   const entry = (prefix) =>
     new RegExp(String.raw`^${prefix}${param}:[ \t]*['"]?([^'"\s]+)`, 'm');
@@ -137,8 +136,9 @@ const scriptPin = (get) => () => {
 };
 
 // Version params that draft posts freeze from a live declaration, mapped to
-// it. A post that renders an undeclared param fails the build (`param` errors
-// on a missing key), so only the values need checking here.
+// it. Only the values need checking: a post that renders an undeclared param
+// fails the build, since `param` errors on a missing key and (next test) no
+// site param shadows these names.
 const liveVersions = {
   hugoMinVers: declarations['theme/hugo.yaml'],
   hugoSupportedVers: pin,
@@ -149,6 +149,26 @@ const liveVersions = {
   mermaidVers: scriptPin((p) => p.docsy?.plugins?.mermaid?.version),
   markmapVers: scriptPin((p) => p.docsy?.plugins?.markmap?.version),
 };
+
+// `param` falls back to a same-named site param, so an undeclared post param
+// would render the site's value instead of failing the build.
+test('frozen version params have no site-param fallback', () => {
+  const configDir = path.join(repoRoot, 'docsy.dev/config');
+  const siteParams = fs
+    .readdirSync(configDir, { recursive: true })
+    .filter((f) => f.endsWith('.yaml'))
+    .map((f) => path.join(configDir, f))
+    .concat(path.join(repoRoot, 'theme/hugo.yaml'))
+    .flatMap((file) => {
+      const config = parse(fs.readFileSync(file, 'utf8')) ?? {};
+      const params = file.endsWith('params.yaml') ? config : config.params;
+      return Object.keys(params ?? {});
+    });
+  assert.ok(siteParams.includes('hugoMinVersion'), 'site params are read');
+  for (const param of Object.keys(liveVersions)) {
+    assert.ok(!siteParams.includes(param), `${param} is no site param`);
+  }
+});
 
 // A published post's versions must not move with the toolchain (maintainer
 // notes, "Content placement"): no live `hugo-version` shortcode in posts.
@@ -165,15 +185,22 @@ test('blog posts render versions time-insensitively', () => {
   }
 });
 
+const stampedVersion = () => readJSON('theme/package.json').version;
+
 // Frozen versions snapshot publish-time values, so until a post is published
-// they must track the live declarations. Also keeps companion posts in
-// agreement. Dormant for published posts, whose values age by design.
-test('draft posts freeze the currently declared versions', () => {
+// they must track the live declarations; so must the posts of the release
+// being stamped (`docsyReleaseVers` is the stamped version), whose patch-time
+// edits are by hand. Also keeps companion posts in agreement. Dormant for
+// other published posts, whose values age by design.
+test('draft and stamped-release posts freeze the declared versions', () => {
   for (const post of blogPosts()) {
     const frontMatter = frontMatterOf(
       fs.readFileSync(path.join(blogDir, post), 'utf8'),
     );
-    if (!/^draft: true$/m.test(frontMatter)) continue;
+    const isDraft = /^draft: true$/m.test(frontMatter);
+    const isStamped =
+      pageParamOf(frontMatter, 'docsyReleaseVers') === stampedVersion();
+    if (!isDraft && !isStamped) continue;
     for (const [param, live] of Object.entries(liveVersions)) {
       const frozen = pageParamOf(frontMatter, param);
       if (frozen === undefined) continue;
@@ -183,8 +210,9 @@ test('draft posts freeze the currently declared versions', () => {
 });
 
 // A draft guide whose title advertises an upper version bound (`0.166.x`, or
-// an exact `0.166.0`) must keep it on the frozen target: advancing
-// The supported Hugo version forces the guide's title and coverage to be reviewed.
+// an exact `0.166.0`) must keep it on the frozen target: advancing the
+// supported Hugo version then forces a review of the guide's title and
+// coverage.
 test('draft post titles cover the frozen supported Hugo version', () => {
   for (const post of blogPosts()) {
     const frontMatter = frontMatterOf(
