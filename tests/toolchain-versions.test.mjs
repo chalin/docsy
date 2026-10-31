@@ -136,31 +136,25 @@ const scriptPin = (get) => () => {
   return String(value);
 };
 
-// Version params that posts freeze from a live declaration, mapped to it.
-// Posts from 0.18 on name them `*Vers`; earlier posts keep `*Version`.
-const liveVersionsByStem = {
-  hugoMin: declarations['theme/hugo.yaml'],
-  hugoSupported: pin,
-  sassEmbedded: () => readJSON('package.json').devDependencies['sass-embedded'],
-  katex: scriptPin((p) => p.katex?.version),
-  redoc: scriptPin((p) => p.redoc?.version),
-  mermaid: scriptPin((p) => p.docsy?.plugins?.mermaid?.version),
-  markmap: scriptPin((p) => p.docsy?.plugins?.markmap?.version),
+// Version params that draft posts freeze from a live declaration, mapped to
+// it. A post that renders an undeclared param fails the build (`param` errors
+// on a missing key), so only the values need checking here.
+const liveVersions = {
+  hugoMinVers: declarations['theme/hugo.yaml'],
+  hugoSupportedVers: pin,
+  sassEmbeddedVers: () =>
+    readJSON('package.json').devDependencies['sass-embedded'],
+  katexVers: scriptPin((p) => p.katex?.version),
+  redocVers: scriptPin((p) => p.redoc?.version),
+  mermaidVers: scriptPin((p) => p.docsy?.plugins?.mermaid?.version),
+  markmapVers: scriptPin((p) => p.docsy?.plugins?.markmap?.version),
 };
-const liveVersions = Object.fromEntries(
-  Object.entries(liveVersionsByStem).flatMap(([stem, live]) => [
-    [`${stem}Vers`, live],
-    [`${stem}Version`, live],
-  ]),
-);
 
-// A post that renders a declared version param must freeze it in its front
-// matter (maintainer notes, "Hugo versions" and "Content placement").
-test('blog posts freeze the versions that they render', () => {
+// A published post's versions must not move with the toolchain (maintainer
+// notes, "Content placement"): no live `hugo-version` shortcode in posts.
+test('blog posts render versions time-insensitively', () => {
   const posts = blogPosts();
   assert.ok(posts.length > 0, 'blog posts are found');
-
-  let frozenUses = 0;
   for (const post of posts) {
     const text = fs.readFileSync(path.join(blogDir, post), 'utf8');
     assert.doesNotMatch(
@@ -168,19 +162,7 @@ test('blog posts freeze the versions that they render', () => {
       /\{\{[%<]\s*hugo-version\b/,
       `${post} renders versions time-insensitively`,
     );
-    const frontMatter = frontMatterOf(text);
-    for (const param of Object.keys(liveVersions)) {
-      const use = new RegExp(String.raw`\{\{[%<]\s*_?param\s+"?${param}\b`);
-      if (!use.test(text)) continue;
-      frozenUses++;
-      assert.match(
-        pageParamOf(frontMatter, param) ?? '',
-        /^\d+\.\d+\.\d+$/,
-        `${post} freezes ${param} as an effective page param`,
-      );
-    }
   }
-  assert.ok(frozenUses > 0, 'at least one post uses a frozen version param');
 });
 
 // Frozen versions snapshot publish-time values, so until a post is published
@@ -215,9 +197,7 @@ test('draft post titles cover the frozen supported Hugo version', () => {
       /^\s*Hugo\b.*\b(\d+\.\d+\.(?:x|\d+))\b(?!.*\b\d+\.\d+\.(?:x|\d+)\b)/,
     )?.[1];
     if (!bound) continue;
-    const target =
-      pageParamOf(frontMatter, 'hugoSupportedVers') ??
-      pageParamOf(frontMatter, 'hugoSupportedVersion');
+    const target = pageParamOf(frontMatter, 'hugoSupportedVers');
     const covers = bound.endsWith('.x')
       ? target?.startsWith(bound.slice(0, -1))
       : target === bound;
