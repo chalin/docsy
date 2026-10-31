@@ -3033,11 +3033,6 @@
     "when": "2026-10-06T22:46:59Z",
     "via": "lychee",
   },
-  "https://github.com/docsy/docsy/pull/2869": {
-    "result": 200,
-    "when": "2026-10-31T14:20:25Z",
-    "via": "lychee",
-  },
   "https://github.com/docsy/docsy/pull/2888": {
     "result": 200,
     "when": "2026-10-18T22:21:08Z",
@@ -3784,11 +3779,6 @@
   "https://github.com/sass/dart-sass/pull/2413": {
     "result": 200,
     "when": "2026-10-12T04:45:54Z",
-    "via": "lychee",
-  },
-  "https://github.com/sass/dart-sass/pull/2891": {
-    "result": 200,
-    "when": "2026-10-31T00:06:24Z",
     "via": "lychee",
   },
   "https://github.com/shurup": {
