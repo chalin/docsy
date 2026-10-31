@@ -12,6 +12,7 @@ author: >-
 body_class: release-highlights
 tags: [hugo, upgrade]
 params:
+  docsyVersion: 0.18.1 # the Docsy release this guide accompanies
   # Frozen at publication (repo pins at release time).
   hugoSupportedVersion: 0.166.0
   katexVersion: 0.18.9
@@ -19,13 +20,15 @@ params:
   katexMinVersion: 0.18.4
 ---
 
-This post is a companion to the [Docsy 0.18.0 release post](0.18.1/), whose
-[upgrade section](0.18.1/#upgrade) names the Hugo version that 0.18.0 supports.
+This post is a companion to the [Docsy {{% param docsyVersion %}} release
+post][docsy-post], whose [upgrade section][docsy-upgrade] names the Hugo version
+that Docsy supports.
 
 ## Upgrade summary
 
 - **This guide is for you if** you're:
-  - [Upgrading to Docsy 0.18.0](0.18.1/#upgrade) from Hugo 0.164.x or older
+  - [Upgrading to Docsy {{% param docsyVersion %}}][docsy-upgrade] from Hugo
+    0.164.x or older
   - Upgrading only Hugo, past 0.164.x
 - Review {{% _param BADGE BREAKING warning %}} changes:
   <a id="breaking-changes"></a>
@@ -131,8 +134,9 @@ Then:
 
 Hugo 0.166.0's bundled KaTeX, the one behind `transform.ToMath` and Docsy's
 `math` fences, emits markup that needs a KaTeX {{% param katexMinVersion %}} or
-later stylesheet; an older one misrenders some expressions. Docsy 0.18.0's
-[pin](0.18.1/#upgrade), KaTeX {{% param katexVersion %}}, satisfies it.
+later stylesheet; an older one misrenders some expressions. Docsy's pin has
+satisfied it since 0.18.0 (KaTeX {{% param katexVersion %}}); for the current
+value, see the [supported versions][docsy-upgrade].
 
 ### Actions {#katex-actions}
 
@@ -141,7 +145,7 @@ stylesheet below {{% param katexMinVersion %}}, through `params.katex.version`
 or an overridden `scripts/katex.html`.
 
 - Remove your pin to take Docsy's default, or update an overridden partial's
-  stylesheet to the [supported version](0.18.1/#upgrade); for a custom pin, see
+  stylesheet to the [supported version][docsy-upgrade]; for a custom pin, see
   [KaTeX version][katex-docs].
 
 ## Imaging config deprecations now warn (0.166.0) {#imaging}
@@ -219,13 +223,15 @@ Hugo][update-hugo] to
 
 Confirm that you've addressed [every action][] that applies to your site. Then:
 
-- Upgrading as part of [Docsy 0.18.0](0.18.1/)? Continue with its
-  [upgrade section](0.18.1/#upgrade).
+- Upgrading as part of [Docsy {{% param docsyVersion %}}][docsy-post]? Continue
+  with its [upgrade section][docsy-upgrade].
 - Otherwise, finish with the [generic site checks][check].
 
 <!-- prettier-ignore-start -->
 [check]: /docs/update/#check
 [default-mounts]: https://gohugo.io/configuration/module/#default-mounts
+[docsy-post]: <{{% param docsyVersion %}}/>
+[docsy-upgrade]: <{{% param docsyVersion %}}/#upgrade>
 [every action]: #upgrade-summary
 [hugo-0.165.0]: https://github.com/gohugoio/hugo/releases/tag/v0.165.0
 [hugo-0.166.0]: https://github.com/gohugoio/hugo/releases/tag/v0.166.0
