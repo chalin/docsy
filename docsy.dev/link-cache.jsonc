@@ -3694,6 +3694,11 @@
     "when": "2026-10-12T04:45:54Z",
     "via": "lychee",
   },
+  "https://github.com/sass/dart-sass/pull/2891": {
+    "result": 200,
+    "when": "2026-10-31T00:06:24Z",
+    "via": "lychee",
+  },
   "https://github.com/shurup": {
     "result": 200,
     "when": "2026-10-12T04:45:53Z",
