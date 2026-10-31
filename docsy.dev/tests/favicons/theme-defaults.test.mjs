@@ -214,6 +214,21 @@ test('theme ignores a non-square favicon PNG variant', () => {
   );
 });
 
+// Zero-padded sizes, excluded by the sized-variants helper's regex; `040`
+// collides with the decimal `32`.
+test('theme ignores zero-padded favicon PNG variants', () => {
+  const links = buildSiteFavicons(undefined, 'http://localhost/', [
+    'favicon-08x08.png',
+    'favicon-040x040.png',
+    'favicon-32x32.png',
+  ]);
+  assert.equal(
+    links,
+    '<link rel="icon" href="/favicon-32x32.png" type="image/png" sizes="32x32" />\n',
+    'decimal variant is linked once, zero-padded variants are ignored',
+  );
+});
+
 // A sized apple-touch-icon variant stands on its own: it is linked with its
 // sizes even when the unsized apple-touch-icon.png is absent.
 test('theme links a sized apple-touch-icon without the unsized file', () => {

@@ -1860,6 +1860,11 @@
     "when": "2026-10-18T01:00:59Z",
     "via": "lychee",
   },
+  "https://github.com/docsy/docsy/issues/2911": {
+    "result": 200,
+    "when": "2026-10-31T10:53:53Z",
+    "via": "lychee",
+  },
   "https://github.com/docsy/docsy/issues/331": {
     "result": 200,
     "when": "2026-09-18T01:19:19Z",
@@ -2958,6 +2963,11 @@
   "https://github.com/docsy/docsy/pull/2905": {
     "result": 200,
     "when": "2026-10-30T02:02:33Z",
+    "via": "lychee",
+  },
+  "https://github.com/docsy/docsy/pull/2912": {
+    "result": 200,
+    "when": "2026-10-31T12:29:13Z",
     "via": "lychee",
   },
   "https://github.com/docsy/docsy/pull/941": {
