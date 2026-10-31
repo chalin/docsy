@@ -2971,14 +2971,29 @@
     "when": "2026-10-06T22:46:59Z",
     "via": "lychee",
   },
+  "https://github.com/docsy/docsy/pull/2869": {
+    "result": 200,
+    "when": "2026-10-31T14:20:25Z",
+    "via": "lychee",
+  },
   "https://github.com/docsy/docsy/pull/2888": {
     "result": 200,
     "when": "2026-10-18T22:21:08Z",
     "via": "lychee",
   },
+  "https://github.com/docsy/docsy/pull/2901": {
+    "result": 200,
+    "when": "2026-10-31T14:20:25Z",
+    "via": "lychee",
+  },
   "https://github.com/docsy/docsy/pull/2905": {
     "result": 200,
     "when": "2026-10-30T02:02:33Z",
+    "via": "lychee",
+  },
+  "https://github.com/docsy/docsy/pull/2910": {
+    "result": 200,
+    "when": "2026-10-31T14:20:25Z",
     "via": "lychee",
   },
   "https://github.com/docsy/docsy/pull/2912": {

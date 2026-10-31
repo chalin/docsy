@@ -176,6 +176,11 @@ page or the [git history since 0.18.0][].
 - Fixed zero-padded favicon names, such as `favicon-08x08.png`, failing the
   build or reading as octal; such files are now left unlinked ([#2912][]).
 
+**Security**:
+
+- Hardened the [`shared` chrome restore][ug-donor-page] to accept only
+  same-origin page paths ([#2901][]).
+
 [**Experimental**](#experimental):
 
 - **[`llms.txt`][ug-llms-txt]**: fixed the documentation index taking a nested
@@ -200,6 +205,7 @@ page or the [git history since 0.18.0][].
 [#2868]: https://github.com/docsy/docsy/issues/2868
 [#2875]: https://github.com/docsy/docsy/issues/2875
 [#2888]: https://github.com/docsy/docsy/pull/2888
+[#2901]: https://github.com/docsy/docsy/pull/2901
 [#2905]: https://github.com/docsy/docsy/pull/2905
 [#2910]: https://github.com/docsy/docsy/pull/2910
 [#2911]: https://github.com/docsy/docsy/issues/2911
