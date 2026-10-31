@@ -167,8 +167,9 @@ since 0.18.0][].
 - Fixed builds failing with `page reference "docs" is ambiguous` on sites with
   pages named `docs` but no top-level `docs` section ([#2875][],
   [design][project-root-page]).
-- Fixed tabpane IDs colliding across the tabpanes of a combined page, such as a
-  print page; generated `tabs-NN-NN` anchors change ([#2868][]).
+- Fixed tabpane IDs colliding on combined pages, such as print pages, and for a
+  tabpane nested in another shortcode; generated `tabs-NN-NN` anchors change,
+  and panes now carry `aria-labelledby` ([#2868][]).
 - Fixed builds failing with `failed to read directory "static"` on Hugo 0.160.1
   through 0.163.0 for sites without `static/` ([#2911][]).
 - Fixed a zero-padded icon size such as `favicon-08x08.png` failing the build or
@@ -199,7 +200,6 @@ since 0.18.0][].
 [#2888]: https://github.com/docsy/docsy/pull/2888
 [#2905]: https://github.com/docsy/docsy/pull/2905
 [#2911]: https://github.com/docsy/docsy/issues/2911
-[#2912]: https://github.com/docsy/docsy/pull/2912
 [0.18.1]: https://github.com/docsy/docsy/releases/latest?FIXME=v0.18.1
 [0.18.1-blog]: /blog/2026/0.18.1/#v0.18.1
 [git history since 0.18.0]:
