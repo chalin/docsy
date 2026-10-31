@@ -12,7 +12,7 @@ author: >-
 body_class: release-highlights
 tags: [hugo, upgrade]
 params:
-  docsyVersion: 0.18.1 # the Docsy release this guide accompanies
+  docsyReleaseVersion: 0.18.1
   # Frozen at publication (repo pins at release time).
   hugoSupportedVersion: 0.166.0
   katexVersion: 0.18.9
@@ -20,15 +20,15 @@ params:
   katexMinVersion: 0.18.4
 ---
 
-This post is a companion to the [Docsy {{% param docsyVersion %}} release
+This post is a companion to the [Docsy {{% param docsyReleaseVersion %}} release
 post][docsy-post], whose [upgrade section][docsy-upgrade] names the Hugo version
 that Docsy supports.
 
 ## Upgrade summary
 
 - **This guide is for you if** you're:
-  - [Upgrading to Docsy {{% param docsyVersion %}}][docsy-upgrade] from Hugo
-    0.164.x or older
+  - [Upgrading to Docsy {{% param docsyReleaseVersion %}}][docsy-upgrade] from
+    Hugo 0.164.x or older
   - Upgrading only Hugo, past 0.164.x
 - Review {{% _param BADGE BREAKING warning %}} changes:
   <a id="breaking-changes"></a>
@@ -223,15 +223,15 @@ Hugo][update-hugo] to
 
 Confirm that you've addressed [every action][] that applies to your site. Then:
 
-- Upgrading as part of [Docsy {{% param docsyVersion %}}][docsy-post]? Continue
-  with its [upgrade section][docsy-upgrade].
+- Upgrading as part of [Docsy {{% param docsyReleaseVersion %}}][docsy-post]?
+  Continue with its [upgrade section][docsy-upgrade].
 - Otherwise, finish with the [generic site checks][check].
 
 <!-- prettier-ignore-start -->
 [check]: /docs/update/#check
 [default-mounts]: https://gohugo.io/configuration/module/#default-mounts
-[docsy-post]: <{{% param docsyVersion %}}/>
-[docsy-upgrade]: <{{% param docsyVersion %}}/#upgrade>
+[docsy-post]: <{{% param docsyReleaseVersion %}}/>
+[docsy-upgrade]: <{{% param docsyReleaseVersion %}}/#upgrade>
 [every action]: #upgrade-summary
 [hugo-0.165.0]: https://github.com/gohugoio/hugo/releases/tag/v0.165.0
 [hugo-0.166.0]: https://github.com/gohugoio/hugo/releases/tag/v0.166.0
