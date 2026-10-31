@@ -1,5 +1,5 @@
 // Docsy's version declarations must stay consistent, among themselves and with
-// the versions that draft blog posts freeze (maintainer notes, "Hugo versions",
+// the versions that blog posts freeze (maintainer notes, "Hugo versions",
 // "Dependency updates", and "Content placement"). Fast and offline.
 
 import test from 'node:test';
@@ -114,8 +114,8 @@ const blogPosts = () =>
   fs.readdirSync(blogDir, { recursive: true }).filter((f) => f.endsWith('.md'));
 const frontMatterOf = (text) => text.match(/^---\n([\s\S]*?)\n---/)?.[1] ?? '';
 
-// Hugo resolves a page param only when it is a top-level front-matter field or
-// a direct child of `params:`; deeper nesting leaves it undeclared.
+// A bare param name resolves only as a top-level front-matter field or a
+// direct child of `params:`.
 const pageParamOf = (frontMatter, param) => {
   const entry = (prefix) =>
     new RegExp(String.raw`^${prefix}${param}:[ \t]*['"]?([^'"\s]+)`, 'm');
@@ -135,10 +135,9 @@ const scriptPin = (get) => () => {
   return String(value);
 };
 
-// Version params that draft posts freeze from a live declaration, mapped to
-// it. Only the values need checking: a post that renders an undeclared param
-// fails the build, since `param` errors on a missing key and (next test) no
-// site param shadows these names.
+// Version params that posts freeze from a live declaration, mapped to it.
+// Only the values need checking: `param` fails the build on an undeclared
+// name, given the next test.
 const liveVersions = {
   hugoMinVers: declarations['theme/hugo.yaml'],
   hugoSupportedVers: pin,
@@ -166,21 +165,21 @@ test('frozen version params have no site-param fallback', () => {
     });
   assert.ok(siteParams.includes('hugoMinVersion'), 'site params are read');
   for (const param of Object.keys(liveVersions)) {
-    assert.ok(!siteParams.includes(param), `${param} is no site param`);
+    assert.ok(!siteParams.includes(param), `${param} is page-only`);
   }
 });
 
 // A published post's versions must not move with the toolchain (maintainer
-// notes, "Content placement"): no live `hugo-version` shortcode in posts.
-test('blog posts render versions time-insensitively', () => {
+// notes, "Content placement"): no live version shortcode in posts.
+test('blog posts use no live version shortcode', () => {
   const posts = blogPosts();
   assert.ok(posts.length > 0, 'blog posts are found');
   for (const post of posts) {
     const text = fs.readFileSync(path.join(blogDir, post), 'utf8');
     assert.doesNotMatch(
       text,
-      /\{\{[%<]\s*hugo-version\b/,
-      `${post} renders versions time-insensitively`,
+      /\{\{[%<]\s*(?:hugo|sass-embedded)-version\b/,
+      `${post} uses no live version shortcode`,
     );
   }
 });
@@ -189,10 +188,11 @@ const stampedVersion = () => readJSON('theme/package.json').version;
 
 // Frozen versions snapshot publish-time values, so until a post is published
 // they must track the live declarations; so must the posts of the release
-// being stamped (`docsyReleaseVers` is the stamped version), whose patch-time
-// edits are by hand. Also keeps companion posts in agreement. Dormant for
-// other published posts, whose values age by design.
+// being stamped, whose patch-time edits are by hand. Also keeps companion
+// posts in agreement. Dormant for other published posts, whose values age by
+// design.
 test('draft and stamped-release posts freeze the declared versions', () => {
+  let compared = 0;
   for (const post of blogPosts()) {
     const frontMatter = frontMatterOf(
       fs.readFileSync(path.join(blogDir, post), 'utf8'),
@@ -205,8 +205,10 @@ test('draft and stamped-release posts freeze the declared versions', () => {
       const frozen = pageParamOf(frontMatter, param);
       if (frozen === undefined) continue;
       assert.equal(frozen, live(), `${post} freezes the current ${param}`);
+      compared++;
     }
   }
+  assert.ok(compared > 0, 'a draft or stamped post freezes a declared version');
 });
 
 // A draft guide whose title advertises an upper version bound (`0.166.x`, or
