@@ -140,9 +140,9 @@ later stylesheet; an older one misrenders some expressions. Docsy 0.18.0's
 stylesheet below {{% param katexMinVersion %}}, through `params.katex.version`
 or an overridden `scripts/katex.html`.
 
-- Remove your pin to take Docsy's default, KaTeX {{% param katexVersion %}}, or
-  update an overridden partial's stylesheet to it; for a custom pin, see [KaTeX
-  version][katex-docs].
+- Remove your pin to take Docsy's default, or update an overridden partial's
+  stylesheet to the [supported version](0.18.0/#upgrade); for a custom pin, see
+  [KaTeX version][katex-docs].
 
 ## Imaging config deprecations now warn (0.166.0) {#imaging}
 
