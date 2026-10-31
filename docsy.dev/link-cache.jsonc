@@ -1412,6 +1412,12 @@
     "via": "manual",
     "expires": "2026-10-31",
   },
+  "https://github.com/docsy/docsy/compare/v0.18.1...main": {
+    "result": 206,
+    "when": "2026-10-31T16:08:08Z",
+    "via": "manual",
+    "expires": "2026-10-31",
+  },
   "https://github.com/docsy/docsy/compare/v0.8.0...v0.9.0": {
     "result": 200,
     "when": "2026-09-18T01:33:10Z",
