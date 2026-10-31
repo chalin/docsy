@@ -159,7 +159,7 @@ functionality, depending on scope. Prefer narrow, focused PRs where possible.
 ## v0.18.1 {#v0.18.1}
 
 For upgrade notes and supported-version moves, see [v0.18.1][0.18.1-blog] in the
-0.18.0 release report. For the full list of changes, see the [0.18.1][] release
+0.18 release report. For the full list of changes, see the [0.18.1][] release
 page or the [git history since 0.18.0][].
 
 **Other changes**:
@@ -223,7 +223,7 @@ page or the [git history since 0.18.0][].
 
 ## v0.18.0 {#v0.18.0}
 
-For an introduction to this release, see the [0.18.0 release report][]. For the
+For an introduction to this release, see the [0.18 release report][]. For the
 full list of changes, see the [0.18.0][] release page or the [git history since
 0.17.0][]. For Hugo-specific notes, see the [Hugo 0.165+ upgrade guide][].
 
@@ -327,7 +327,7 @@ full list of changes, see the [0.18.0][] release page or the [git history since
 [#2852]: https://github.com/docsy/docsy/pull/2852
 [#2857]: https://github.com/docsy/docsy/pull/2857
 [0.18.0]: https://github.com/docsy/docsy/releases/tag/v0.18.0
-[0.18.0 release report]: /blog/2026/0.18.1/
+[0.18 release report]: /blog/2026/0.18.1/
 [0.18.0-blog-jquery]: /blog/2026/0.18.1/#jquery
 [0.18.0-blog-llms-txt]: /blog/2026/0.18.1/#llms-txt-actions
 [0.18.0-blog-org-move]: /blog/2026/0.18.1/#org-move
