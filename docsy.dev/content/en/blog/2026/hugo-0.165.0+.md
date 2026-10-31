@@ -13,11 +13,9 @@ body_class: release-highlights
 tags: [hugo, upgrade]
 params:
   docsyReleaseVers: 0.18.1
-  # Frozen at publication (repo pins at release time).
   hugoSupportedVers: 0.166.0
-  katex0_18_0Vers: 0.18.9 # Docsy 0.18.0's pin; the live one is the post's
-  # Stylesheet version that Hugo 0.166.0's bundled KaTeX needs.
-  katexMinVers: 0.18.4
+  katex0_18_0Vers: 0.18.9
+  katexMinVers: 0.18.4 # what Hugo 0.166.0's bundled KaTeX needs
 ---
 
 This post is a companion to the [Docsy {{% param docsyReleaseVers %}} release
