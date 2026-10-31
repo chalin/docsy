@@ -137,16 +137,22 @@ const scriptPin = (get) => () => {
 };
 
 // Version params that posts freeze from a live declaration, mapped to it.
-const liveVersions = {
-  hugoMinVers: declarations['theme/hugo.yaml'],
-  hugoSupportedVers: pin,
-  sassEmbeddedVers: () =>
-    readJSON('package.json').devDependencies['sass-embedded'],
-  katexVers: scriptPin((p) => p.katex?.version),
-  redocVers: scriptPin((p) => p.redoc?.version),
-  mermaidVers: scriptPin((p) => p.docsy?.plugins?.mermaid?.version),
-  markmapVers: scriptPin((p) => p.docsy?.plugins?.markmap?.version),
+// Posts from 0.18 on name them `*Vers`; earlier posts keep `*Version`.
+const liveVersionsByStem = {
+  hugoMin: declarations['theme/hugo.yaml'],
+  hugoSupported: pin,
+  sassEmbedded: () => readJSON('package.json').devDependencies['sass-embedded'],
+  katex: scriptPin((p) => p.katex?.version),
+  redoc: scriptPin((p) => p.redoc?.version),
+  mermaid: scriptPin((p) => p.docsy?.plugins?.mermaid?.version),
+  markmap: scriptPin((p) => p.docsy?.plugins?.markmap?.version),
 };
+const liveVersions = Object.fromEntries(
+  Object.entries(liveVersionsByStem).flatMap(([stem, live]) => [
+    [`${stem}Vers`, live],
+    [`${stem}Version`, live],
+  ]),
+);
 
 // A post that renders a declared version param must freeze it in its front
 // matter (maintainer notes, "Hugo versions" and "Content placement").
@@ -196,7 +202,7 @@ test('draft posts freeze the currently declared versions', () => {
 
 // A draft guide whose title advertises an upper version bound (`0.166.x`, or
 // an exact `0.166.0`) must keep it on the frozen target: advancing
-// hugoSupportedVers forces the guide's title and coverage to be reviewed.
+// The supported Hugo version forces the guide's title and coverage to be reviewed.
 test('draft post titles cover the frozen supported Hugo version', () => {
   for (const post of blogPosts()) {
     const frontMatter = frontMatterOf(
@@ -209,13 +215,15 @@ test('draft post titles cover the frozen supported Hugo version', () => {
       /^\s*Hugo\b.*\b(\d+\.\d+\.(?:x|\d+))\b(?!.*\b\d+\.\d+\.(?:x|\d+)\b)/,
     )?.[1];
     if (!bound) continue;
-    const target = pageParamOf(frontMatter, 'hugoSupportedVers');
+    const target =
+      pageParamOf(frontMatter, 'hugoSupportedVers') ??
+      pageParamOf(frontMatter, 'hugoSupportedVersion');
     const covers = bound.endsWith('.x')
       ? target?.startsWith(bound.slice(0, -1))
       : target === bound;
     assert.ok(
       covers,
-      `${post} title bound ${bound} covers hugoSupportedVers ${target}`,
+      `${post} title bound ${bound} covers the supported Hugo version ${target}`,
     );
   }
 });

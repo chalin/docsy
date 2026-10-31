@@ -13,7 +13,7 @@ author: >-
 body_class: release-highlights
 tags: [hugo, upgrade]
 params:
-  hugoSupportedVers: 0.164.0
+  hugoSupportedVersion: 0.164.0
 # prettier-ignore
 cSpell:ignore: amp AVIF CatmullRom chromastyles contentbasename downscaling goldmark Netlify Pandoc partialCached passthrough protobuf renderSegments reStructuredText retokenizes useEmbedded userinfo
 ---
@@ -42,7 +42,8 @@ specifies the [Hugo versions that 0.16.0 requires and validates](0.16.0/#hugo).
   - [Faster builds and stricter templates](#hugo-0-164-0)
   - [Notable changes](#notable-changes)
 - {{% _param FAS rocket primary %}} Jump to
-  [Upgrade to Hugo {{% param hugoSupportedVers %}}](#upgrade) once you're ready.
+  [Upgrade to Hugo {{% param hugoSupportedVersion %}}](#upgrade) once you're
+  ready.
 
 ## Language API deprecations (0.158.0) {#language-apis}
 
@@ -293,21 +294,21 @@ stopping at 0.160.1.
 - On Hugo 0.164.0, `hugo gen chromastyles` gains `--mode` and `--modeSelector`
   flags for generating combined light/dark syntax-highlighting stylesheets.
 
-## {{% _param FAS rocket primary %}} Upgrade to Hugo {{% param hugoSupportedVers %}} {#upgrade}
+## {{% _param FAS rocket primary %}} Upgrade to Hugo {{% param hugoSupportedVersion %}} {#upgrade}
 
 After addressing applicable breaking changes and deprecations, upgrade to Hugo
-[{{% param hugoSupportedVers %}}][hugo-supported-version].
+[{{% param hugoSupportedVersion %}}][hugo-supported-version].
 
 If you use the [hugo-extended][] npm package:
 
 ```sh
-npm install --save-exact --save-dev hugo-extended@{{% param hugoSupportedVers %}}
+npm install --save-exact --save-dev hugo-extended@{{% param hugoSupportedVersion %}}
 ```
 
 If you use [hvm][]:
 
 ```sh
-hvm use {{% param hugoSupportedVers %}}/extended
+hvm use {{% param hugoSupportedVersion %}}/extended
 ```
 
 For other installation methods, see [Install Hugo][].
@@ -335,7 +336,7 @@ Confirm that you've addressed [every action][] that applies to your site. Then:
 [check]: /docs/update/#check
 [every action]: #upgrade-summary
 [hugo-extended]: https://www.npmjs.com/package/hugo-extended
-[hugo-supported-version]: <https://github.com/gohugoio/hugo/releases/tag/v{{% param hugoSupportedVers %}}>
+[hugo-supported-version]: <https://github.com/gohugoio/hugo/releases/tag/v{{% param hugoSupportedVersion %}}>
 [hugo-164-perf]: https://discourse.gohugo.io/t/hugo-building-slowly-from-release-0-128-0/57314/21
 [hvm]: https://github.com/jmooring/hvm
 [Install Hugo]: /docs/get-started/docsy-as-module/installation-prerequisites/#install-hugo
