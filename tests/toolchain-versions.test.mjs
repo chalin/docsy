@@ -138,14 +138,14 @@ const scriptPin = (get) => () => {
 
 // Version params that posts freeze from a live declaration, mapped to it.
 const liveVersions = {
-  hugoMinVersion: declarations['theme/hugo.yaml'],
-  hugoSupportedVersion: pin,
-  sassEmbeddedVersion: () =>
+  hugoMinVers: declarations['theme/hugo.yaml'],
+  hugoSupportedVers: pin,
+  sassEmbeddedVers: () =>
     readJSON('package.json').devDependencies['sass-embedded'],
-  katexVersion: scriptPin((p) => p.katex?.version),
-  redocVersion: scriptPin((p) => p.redoc?.version),
-  mermaidVersion: scriptPin((p) => p.docsy?.plugins?.mermaid?.version),
-  markmapVersion: scriptPin((p) => p.docsy?.plugins?.markmap?.version),
+  katexVers: scriptPin((p) => p.katex?.version),
+  redocVers: scriptPin((p) => p.redoc?.version),
+  mermaidVers: scriptPin((p) => p.docsy?.plugins?.mermaid?.version),
+  markmapVers: scriptPin((p) => p.docsy?.plugins?.markmap?.version),
 };
 
 // A post that renders a declared version param must freeze it in its front
@@ -196,7 +196,7 @@ test('draft posts freeze the currently declared versions', () => {
 
 // A draft guide whose title advertises an upper version bound (`0.166.x`, or
 // an exact `0.166.0`) must keep it on the frozen target: advancing
-// hugoSupportedVersion forces the guide's title and coverage to be reviewed.
+// hugoSupportedVers forces the guide's title and coverage to be reviewed.
 test('draft post titles cover the frozen supported Hugo version', () => {
   for (const post of blogPosts()) {
     const frontMatter = frontMatterOf(
@@ -209,13 +209,13 @@ test('draft post titles cover the frozen supported Hugo version', () => {
       /^\s*Hugo\b.*\b(\d+\.\d+\.(?:x|\d+))\b(?!.*\b\d+\.\d+\.(?:x|\d+)\b)/,
     )?.[1];
     if (!bound) continue;
-    const target = pageParamOf(frontMatter, 'hugoSupportedVersion');
+    const target = pageParamOf(frontMatter, 'hugoSupportedVers');
     const covers = bound.endsWith('.x')
       ? target?.startsWith(bound.slice(0, -1))
       : target === bound;
     assert.ok(
       covers,
-      `${post} title bound ${bound} covers hugoSupportedVersion ${target}`,
+      `${post} title bound ${bound} covers hugoSupportedVers ${target}`,
     );
   }
 });
