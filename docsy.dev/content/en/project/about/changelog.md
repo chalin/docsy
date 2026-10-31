@@ -168,8 +168,7 @@ since 0.18.0][].
   pages named `docs` but no top-level `docs` section ([#2875][],
   [design][project-root-page]).
 - Fixed tabpane IDs colliding across the tabpanes of a combined page, such as a
-  print page; the IDs are now keyed on the page and the enclosing shortcodes, so
-  generated `tabs-NN-NN` anchors change ([#2868][]).
+  print page; generated `tabs-NN-NN` anchors change ([#2868][]).
 - Fixed builds failing with `failed to read directory "static"` on Hugo 0.160.1
   through 0.163.0 for sites without `static/` ([#2911][]).
 - Fixed a zero-padded icon size such as `favicon-08x08.png` failing the build or
