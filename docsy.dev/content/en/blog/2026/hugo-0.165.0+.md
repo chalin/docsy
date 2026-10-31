@@ -14,19 +14,16 @@ tags: [hugo, upgrade]
 params:
   docsyReleaseVers: 0.18.1
   hugoSupportedVers: 0.166.0
-  katex0_18_0Vers: 0.18.9
   katexMinVers: 0.18.4 # what Hugo 0.166.0's bundled KaTeX needs
 ---
 
-This post is a companion to the [Docsy {{% param docsyReleaseVers %}} release
-post][0.18], whose [upgrade section][0.18-upgrade] names the Hugo version that
-Docsy supports.
+This post is a companion to the [Docsy 0.18 release post][0.18], whose [upgrade
+section][0.18-upgrade] names the Hugo version that it supports.
 
 ## Upgrade summary
 
 - **This guide is for you if** you're:
-  - [Upgrading to Docsy {{% param docsyReleaseVers %}}][0.18-upgrade] from Hugo
-    0.164.x or older
+  - [Upgrading to Docsy 0.18][0.18-upgrade] from Hugo 0.164.x or older
   - Upgrading only Hugo, past 0.164.x
 - Review {{% _param BADGE BREAKING warning %}} changes:
   <a id="breaking-changes"></a>
@@ -131,9 +128,9 @@ Then:
 
 Hugo 0.166.0's bundled KaTeX, the one behind `transform.ToMath` and Docsy's
 `math` fences, emits markup that needs a KaTeX {{% param katexMinVers %}} or
-later stylesheet; an older one misrenders some expressions. Docsy's pin has
-satisfied it since 0.18.0, which shipped KaTeX {{% param katex0_18_0Vers %}};
-for the current value, see the [supported versions][0.18-upgrade].
+later stylesheet; an older one misrenders some expressions. Docsy's default pin
+has satisfied it since 0.17.0; for the current value, see the [supported
+versions][0.18-upgrade].
 
 ### Actions {#katex-actions}
 
@@ -219,8 +216,8 @@ Hugo][update-hugo] to [{{% param hugoSupportedVers %}}][hugo-supported-version].
 
 Confirm that you've addressed [every action][] that applies to your site. Then:
 
-- Upgrading as part of [Docsy {{% param docsyReleaseVers %}}][0.18]? Continue
-  with its [upgrade section][0.18-upgrade].
+- Upgrading as part of [Docsy 0.18][0.18]? Continue with its [upgrade
+  section][0.18-upgrade].
 - Otherwise, finish with the [generic site checks][check].
 
 <!-- prettier-ignore-start -->
