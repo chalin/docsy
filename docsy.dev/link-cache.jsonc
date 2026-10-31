@@ -1862,9 +1862,19 @@
     "when": "2026-10-17T20:04:45Z",
     "via": "lychee",
   },
+  "https://github.com/docsy/docsy/issues/2868": {
+    "result": 200,
+    "when": "2026-10-31T00:54:34Z",
+    "via": "lychee",
+  },
   "https://github.com/docsy/docsy/issues/2875": {
     "result": 200,
     "when": "2026-10-18T01:00:59Z",
+    "via": "lychee",
+  },
+  "https://github.com/docsy/docsy/issues/2908": {
+    "result": 200,
+    "when": "2026-10-31T00:54:34Z",
     "via": "lychee",
   },
   "https://github.com/docsy/docsy/issues/2911": {
