@@ -135,9 +135,7 @@ const scriptPin = (get) => () => {
   return String(value);
 };
 
-// Version params that posts freeze from a live declaration, mapped to it.
-// Only the values need checking: `param` fails the build on an undeclared
-// name, given the next test.
+// Post version params, each mapped to its live declaration.
 const liveVersions = {
   hugoMinVers: declarations['theme/hugo.yaml'],
   hugoSupportedVers: pin,
@@ -150,7 +148,8 @@ const liveVersions = {
 };
 
 // `param` falls back to a same-named site param, so an undeclared post param
-// would render the site's value instead of failing the build.
+// would render the site's value instead of failing the build: the `*Vers`
+// suffix belongs to page params alone.
 test('frozen version params have no site-param fallback', () => {
   const configDir = path.join(repoRoot, 'docsy.dev/config');
   const siteParams = fs
@@ -165,50 +164,66 @@ test('frozen version params have no site-param fallback', () => {
     });
   assert.ok(siteParams.includes('hugoMinVersion'), 'site params are read');
   for (const param of Object.keys(liveVersions)) {
-    assert.ok(!siteParams.includes(param), `${param} is page-only`);
+    assert.match(param, /Vers$/, `${param} carries the page-only suffix`);
+  }
+  for (const key of siteParams) {
+    assert.doesNotMatch(
+      key,
+      /Vers$/,
+      `site param ${key} leaves *Vers to pages`,
+    );
   }
 });
 
 // A published post's versions must not move with the toolchain (maintainer
-// notes, "Content placement"): no live version shortcode in posts.
-test('blog posts use no live version shortcode', () => {
+// notes, "Content placement").
+test('blog posts render no live version', () => {
   const posts = blogPosts();
   assert.ok(posts.length > 0, 'blog posts are found');
   for (const post of posts) {
     const text = fs.readFileSync(path.join(blogDir, post), 'utf8');
     assert.doesNotMatch(
       text,
-      /\{\{[%<]\s*(?:hugo|sass-embedded)-version\b/,
-      `${post} uses no live version shortcode`,
+      /\{\{[%<]\s*(?:(?:hugo|sass-embedded|dev)-version\b|_?param\s+"?(?:hugoMinVersion|tdVersion)\b)/,
+      `${post} renders no live version`,
     );
   }
 });
 
 const stampedVersion = () => readJSON('theme/package.json').version;
 
-// Frozen versions snapshot publish-time values, so until a post is published
-// they must track the live declarations; so must the posts of the release
-// being stamped, whose patch-time edits are by hand. Also keeps companion
-// posts in agreement. Dormant for other published posts, whose values age by
-// design.
+// Until published, and again while its release is being stamped, a post's
+// frozen values must track the live declarations (published values age by
+// design). Also keeps companion posts in agreement.
 test('draft and stamped-release posts freeze the declared versions', () => {
-  let compared = 0;
+  const stamped = stampedVersion();
+  const isRelease = STABLE_SEMVER.test(stamped);
+  const stampedLine = stamped.split('.').slice(0, 2).join('.') + '.';
+  let draftCompared = 0;
+  let stampedCompared = 0;
   for (const post of blogPosts()) {
     const frontMatter = frontMatterOf(
       fs.readFileSync(path.join(blogDir, post), 'utf8'),
     );
     const isDraft = /^draft: true$/m.test(frontMatter);
-    const isStamped =
-      pageParamOf(frontMatter, 'docsyReleaseVers') === stampedVersion();
+    const releaseVers = pageParamOf(frontMatter, 'docsyReleaseVers');
+    if (isRelease && releaseVers?.startsWith(stampedLine)) {
+      assert.equal(releaseVers, stamped, `${post} is on the stamped release`);
+    }
+    const isStamped = releaseVers === stamped;
     if (!isDraft && !isStamped) continue;
     for (const [param, live] of Object.entries(liveVersions)) {
       const frozen = pageParamOf(frontMatter, param);
       if (frozen === undefined) continue;
       assert.equal(frozen, live(), `${post} freezes the current ${param}`);
-      compared++;
+      if (isDraft) draftCompared++;
+      else stampedCompared++;
     }
   }
-  assert.ok(compared > 0, 'a draft or stamped post freezes a declared version');
+  assert.ok(draftCompared > 0, 'a draft post freezes a declared version');
+  if (isRelease) {
+    assert.ok(stampedCompared > 0, 'a stamped post freezes a declared version');
+  }
 });
 
 // A draft guide whose title advertises an upper version bound (`0.166.x`, or
