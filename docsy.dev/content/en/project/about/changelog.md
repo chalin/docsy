@@ -158,9 +158,9 @@ functionality, depending on scope. Prefer narrow, focused PRs where possible.
 
 ## v0.18.1 {#v0.18.1}
 
-For upgrade notes and supported-version moves, see [v0.18.1][0.18.1-blog] in the
-0.18 release report. For the full list of changes, see the [0.18.1][] release
-page or the [git history since 0.18.0][].
+For the supported-version moves, see [v0.18.1][0.18.1-blog] in the [0.18 release
+report][0.18-blog], 0.18.1's upgrade guide. For the full list of changes, see
+the [0.18.1][] release page or the [git history since 0.18.0][].
 
 **Other changes**:
 
@@ -210,6 +210,7 @@ page or the [git history since 0.18.0][].
 [#2910]: https://github.com/docsy/docsy/pull/2910
 [#2911]: https://github.com/docsy/docsy/issues/2911
 [#2912]: https://github.com/docsy/docsy/pull/2912
+[0.18-blog]: /blog/2026/0.18.1/
 [0.18.1]: https://github.com/docsy/docsy/releases/latest?FIXME=v0.18.1
 [0.18.1-blog]: /blog/2026/0.18.1/#v0.18.1
 [git history since 0.18.0]: https://github.com/docsy/docsy/compare/v0.18.0...v0.18.1
@@ -662,7 +663,7 @@ Patch release [0.14.1][]: fixed **ToC** sidebar width in xl viewports
 
 **Resources**:
 
-- [Release 0.14.0 report and upgrade guide][0.14.0-blog]
+- [Release 0.14 report and upgrade guide][0.14.0-blog]
 - [0.14.0][] release page for the full list of changes
 
 [**Breaking changes**](#breaking-change):
@@ -732,7 +733,7 @@ Patch release [0.14.1][]: fixed **ToC** sidebar width in xl viewports
 
 **Resources**:
 
-- [Release 0.13.0 report and upgrade guide][0.13.0-blog]
+- [Release 0.13 report and upgrade guide][0.13.0-blog]
 - [0.13.0][] release page for the full list of changes
 
 [**Breaking changes**](#breaking-change):
