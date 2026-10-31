@@ -129,8 +129,7 @@ Then:
 Hugo 0.166.0's bundled KaTeX, the one behind `transform.ToMath` and Docsy's
 `math` fences, emits markup that needs a KaTeX {{% param katexMinVers %}} or
 later stylesheet; an older one misrenders some expressions. Docsy's default pin
-has satisfied it since 0.17.0; for the 0.18 pin, see the [supported
-versions][0.18-upgrade].
+has satisfied it since 0.17.0.
 
 ### Actions {#katex-actions}
 
@@ -221,10 +220,10 @@ Confirm that you've addressed [every action][] that applies to your site. Then:
 - Otherwise, finish with the [generic site checks][check].
 
 <!-- prettier-ignore-start -->
-[check]: /docs/update/#check
-[default-mounts]: https://gohugo.io/configuration/module/#default-mounts
 [0.18]: <{{% param docsyReleaseVers %}}/>
 [0.18-upgrade]: <{{% param docsyReleaseVers %}}/#upgrade>
+[check]: /docs/update/#check
+[default-mounts]: https://gohugo.io/configuration/module/#default-mounts
 [every action]: #upgrade-summary
 [hugo-0.165.0]: https://github.com/gohugoio/hugo/releases/tag/v0.165.0
 [hugo-0.166.0]: https://github.com/gohugoio/hugo/releases/tag/v0.166.0
