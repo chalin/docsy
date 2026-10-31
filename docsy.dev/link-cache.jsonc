@@ -1395,6 +1395,12 @@
     "when": "2026-10-08T10:42:02Z",
     "via": "lychee",
   },
+  "https://github.com/docsy/docsy/compare/v0.17.0...v0.18.1": {
+    "result": 206,
+    "when": "2026-10-31T15:10:30Z",
+    "via": "manual",
+    "expires": "2026-10-31",
+  },
   "https://github.com/docsy/docsy/compare/v0.18.0...main": {
     "result": 200,
     "when": "2026-10-08T10:07:12Z",
