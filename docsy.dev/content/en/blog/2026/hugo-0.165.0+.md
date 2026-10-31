@@ -15,7 +15,7 @@ params:
   docsyReleaseVers: 0.18.1
   # Frozen at publication (repo pins at release time).
   hugoSupportedVers: 0.166.0
-  katexVers: 0.18.9
+  katex0_18_0Vers: 0.18.9 # Docsy 0.18.0's pin; the live one is the post's
   # Stylesheet version that Hugo 0.166.0's bundled KaTeX needs.
   katexMinVers: 0.18.4
 ---
@@ -134,8 +134,8 @@ Then:
 Hugo 0.166.0's bundled KaTeX, the one behind `transform.ToMath` and Docsy's
 `math` fences, emits markup that needs a KaTeX {{% param katexMinVers %}} or
 later stylesheet; an older one misrenders some expressions. Docsy's pin has
-satisfied it since 0.18.0, which shipped KaTeX {{% param katexVers %}}; for the
-current value, see the [supported versions][0.18-upgrade].
+satisfied it since 0.18.0, which shipped KaTeX {{% param katex0_18_0Vers %}};
+for the current value, see the [supported versions][0.18-upgrade].
 
 ### Actions {#katex-actions}
 
